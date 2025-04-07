@@ -1,0 +1,374 @@
+@font-face {
+    font-family: '프리텐다드고딕';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: '함박눈';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_HambakSnow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+    /* 헤더 스타일 */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;  
+    }
+
+    .Frame1 {
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* 로고 스타일 */
+    .logo {
+        font-family: '함박눈';
+        font-size: 27px;
+        color: #730000;
+    }
+
+    /* 카테고리 스타일 */
+    .categories {
+        display: flex;
+        gap: 40px;
+    }
+
+    .category {
+        color: black;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 20px 0;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    
+    .category:hover {
+        color: #6d211f;
+    }
+
+    .categories .category:nth-child(3) {
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    /* 버튼 스타일 */
+    .Buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    /* 회원가입 버튼 */
+    .BtnSignUp {
+        padding: 8px 8px;
+        background: rgba(217, 217, 217, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .SignUp {
+        text-align: center;
+        color: black;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.6px;
+    }
+
+    /* 로그인 버튼 */
+    .BtnLogin {
+        padding: 8px 20px;
+        background: rgba(217, 217, 217, 0);
+        border-radius: 50px;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .BtnLogin:hover {
+        background-color: #f0f0f0;
+    }
+
+    .Login {
+        text-align: center;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.66px;
+    }
+    
+    		    /* 로그아웃 버튼 */
+    .BtnLogout {
+        padding: 8px 20px;
+        background: rgba(217, 217, 217, 0);
+        border-radius: 50px;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .BtnLogout:hover {
+        background-color: #f0f0f0;
+    }
+
+    .Logout {
+        text-align: center;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.66px;
+    }
+
+    .icon_my {
+    width: 26px;
+    height: 26px;
+    margin-top: 3px;
+    }
+
+
+    /* 게시판 영역 */
+    .container {
+        width: 1200px;
+        margin: 100px auto 0;
+        padding: 20px;
+        text-align: center;
+    }
+
+
+    /* a 태그의 기본 스타일 제거 */
+    .card-header {
+        text-align: left; /* 부모 요소에서 왼쪽 정렬 설정 */
+    }
+    .card-header img {
+        width: 25px;
+        height: 25px;
+    }
+    .card-header h3 {
+        margin-bottom: 0;
+    }
+    .card-header h3 a {
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 요소의 색상 상속 */
+        padding: 6px 6px 0 6px;
+    }
+
+    .card-header h3 a:hover {
+        background-color: #e6e6e6;
+    }
+
+
+    /* 게시글 영역 */
+    .card-view {
+        /* text-align: center; */
+        padding: 5%;
+        border: 1px solid #b7b7b7;
+    }
+    
+    .card-view .title {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    
+    .card-view .myinfo {
+        /* margin: auto; */
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: right; /* 요소 전체 오른쪽 정렬 */
+        
+    }
+    
+    .card-view .myinfo dl {
+        display: inline-block;
+        justify-content: flex-end; /* 오른쪽 정렬 */
+    }
+    
+    .card-view .myinfo dl dt, dd { 
+        display: inline-block;
+        font-size: small;
+    }
+    
+    .card-view .myinfo dl dt {  
+        margin-left: 5px;
+        color: #999;
+        font-size: 15px;
+    }
+    
+    .card-view .myinfo dl dd {
+        margin-right: 10px;
+        margin-left: 5px;
+        font-size: 15px;
+        color: #444444;
+    }
+
+    .space {  /* empty space */
+        border-bottom: 1px solid #ddd;
+        flex-grow: 1; /* 위쪽에 빈 공간을 만들어 콘텐츠가 아래로 밀리도록 설정 */
+        margin: 20px 0 30px 0;
+    }
+    
+    /* 게시글 콘텐트 영역 */
+    .cont {
+        margin-top: 30px;
+        margin-bottom: 10%;
+        padding-bottom: 30px;
+        overflow: hidden; /* 콘텐츠가 영역 밖으로 넘치지 않도록 설정 */
+        display: flex;
+        flex-wrap: wrap; /* 화면 크기에 따라 이미지와 텍스트가 줄 바꿈 되도록 설정 */
+        align-items: flex-start; /* 이미지와 텍스트가 위쪽 정렬되도록 설정 */
+    }
+    .cont img {
+        justify-content: left;
+        max-width: 100%; /* 이미지가 부모 요소의 크기를 넘지 않도록 제한 */
+        height: auto; /* 이미지 비율 유지 */
+        margin: 0 auto; /* 이미지 주변 여백 설정 */
+        margin: 2%;
+    }
+    .cont_text {
+        font-size: 18px;
+        text-align: left;
+    }
+    
+
+    /* 수정, 삭제 버튼 영역 */
+    .btn-view {
+        text-align: right; /* 부모 요소에서 오른쪽 정렬 설정 */
+        margin-bottom: 1%;
+    }
+    
+    .btn-view a {
+        text-decoration: none;
+        background-color: rgba(150, 150, 150, 0.814);
+        display:inline-block;
+        padding: 10px 12px ;
+        margin: 3px;
+        color: #fff;
+        border-radius: 5px;
+        justify-content: right;
+        font-size: 13px;
+    }
+    
+    .btn-view a:hover {
+        background-color: #6d211f;
+        color: #fff;
+    }
+
+
+    /* 댓글 영역 */
+    .card-view .comment {
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: left; /* 요소 전체 left 정렬 */
+        
+    }
+    
+    .card-view .comment dl {
+        display: inline-block;
+        justify-content: flex-start; /* left 정렬 */
+    }
+    
+    .card-view .comment dl dt, dd { 
+        display: inline-block;
+        font-size: small;
+    }
+    
+    .card-view .comment dl dt {  
+        margin-left: 5px;
+        color: #101010;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    
+    .card-view .comment dl dd {
+        margin-right: 10px;
+        margin-left: 5px;
+        font-size: 15px;
+        color: #5e5e5e;
+    }
+
+    /* 좋아요 버튼 눌림 효과 */
+    .btn_Like:active {
+        transform: scale(0.95); /* 눌렀을 때 살짝 작아지는 효과 */
+        opacity: 0.8;
+    }
+    .btn_Like:hover { /* 좋아요 버튼 호버 효과*/
+        cursor: pointer;
+    }
+
+
+    /* ㄹㅇ 댓글 영역 */
+    .comment_area {
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+        margin: 1%;
+    }
+    .comment_area h3 {
+        font-size: 17px;
+        margin-bottom: 0;
+    }
+    .comment_area p {
+        margin: 10px 0 16px 0;
+        font-size: 16px;
+    }
+    .comment_area span {
+        color: #999;
+        margin-right: 15px;
+    }
+    .comment_area .comment_tmdt {
+        margin-bottom: 2%;
+    }
+
+    .reacting_area input {
+        font-size: 17px;
+        padding: 1% 2%;
+        width: 80%;
+        margin-top: 2%;
+    }
+    .reacting_area button {
+        font-size: 14px;
+        padding: 1%;
+        margin-top: 2%;
+    }
+
+
+
+
+
+    /* 부드러운 스크롤 효과 */
+    html {
+        scroll-behavior: smooth;
+    }

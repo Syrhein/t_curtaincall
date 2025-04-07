@@ -1,0 +1,309 @@
+@font-face {
+    font-family: '프리텐다드고딕';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: '함박눈';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_HambakSnow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+    /* 헤더 스타일 */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;
+    }
+
+    .Frame1 {
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* 로고 스타일 */
+    .logo {
+        font-family: '함박눈';
+        font-size: 27px;
+        color: #730000;
+    }
+
+    /* 카테고리 스타일 */
+    .categories {
+        display: flex;
+        gap: 40px;
+    }
+
+    .category {
+        color: black;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 20px 0;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    
+    .category:hover {
+        color: #6d211f;
+    }
+
+    /* 버튼 스타일 */
+    .Buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    /* 회원가입 버튼 */
+    .BtnSignUp {
+        padding: 8px 8px;
+        background: rgba(217, 217, 217, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .SignUp {
+        text-align: center;
+        color: black;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.6px;
+    }
+
+    /* 로그인 버튼 */
+    .BtnLogin {
+        padding: 8px 20px;
+        background: rgba(217, 217, 217, 0);
+        border-radius: 50px;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .BtnLogin:hover {
+        background-color: #f0f0f0;
+    }
+
+    .Login {
+        text-align: center;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.66px;
+    }
+	
+	    /* 로그아웃 버튼 */
+    .BtnLogout {
+        padding: 8px 20px;
+        background: rgba(217, 217, 217, 0);
+        border-radius: 50px;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .BtnLogout:hover {
+        background-color: #f0f0f0;
+    }
+
+    .Logout {
+        text-align: center;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.66px;
+    }
+	
+    .icon_my {
+    width: 26px;
+    height: 26px;        
+    margin-top: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    }
+
+
+    /* 컨테이너 스타일 */
+    .container {
+        width: 1200px;
+        margin: 100px auto 0;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* 환경설정 아이콘 설정 */
+    .settings-icon {
+    width: 27px;
+    height: 27px;
+    position: absolute;
+    top: 20px;
+    right: 17px;
+    cursor: pointer;
+    }
+
+
+    /* 사용자 이름 및 이메일 스타일 */
+    .username {
+    font-size: 30px;
+    font-weight: bolder;
+    margin: 30px;
+    padding: 30px;
+    text-align:left;
+    }
+
+    .userid {
+    color: #666;
+    font-size: 28px;
+    margin: 30px;
+    padding: 30px;
+    text-align:left;
+    margin-top: 50px;
+    }
+
+	.edit-name-btn{
+	height: 40px;
+    width: 150px;
+    font-size: 25px;
+	}
+	
+	
+	.edit-user-info {
+    margin-top: 20px;
+	}
+	
+	.edit-name-form {
+	    margin-top: 10px;
+	}
+	
+	.new-name-input {
+	    padding: 5px;
+	    margin-right: 10px;
+	    height: 30px;
+	    font-size: 20px;
+	}
+	
+	.save-name-btn{
+		height: 30px;
+	    width: 150px;
+	    font-size: 20px;
+	}
+	
+	.cancel-name-btn{
+		height: 30px;
+	    width: 150px;
+	    font-size: 20px;
+	}
+	
+    /* 통계 섹션 스타일 */
+    .stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    }
+
+    .stat-item {
+    text-align: center;
+    padding: 5%;
+    width: 100px;
+    height: 90px;
+    }
+    .stat-item:hover {
+    background-color: #e7e7e77e;
+    }
+
+    .stat-item img {
+    width: 30px;
+    height: 30px;
+    }
+
+    .stat-item h3 {
+    font-size: 20px;
+    margin: 5px;
+    color: #666;
+    }
+
+    .stat-item p {
+    color: #666;
+    margin: 5px 0 0;
+    }
+
+    /* 부드러운 스크롤 효과 */
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    /* 캘린더 */
+	#calendar {
+	    max-width: 900px;
+	    margin: 40px auto;
+	}
+	
+	.fc-daygrid-day {
+	    height: 120px;
+	}
+	
+	.fc-daygrid-event {
+	    background-color: transparent !important;
+	    border: none !important;
+	    box-shadow: none !important;
+	    padding: 0 !important;
+	    margin: 0 !important;
+	    text-decoration: none !important;
+	}
+	
+	.poster-image {
+	    width: 100%;
+	    height: 100%;
+	    object-fit: cover;
+	    border-radius: 5px;
+	    display: block;
+	}
+	
+	/* 캘린더 */
+	.fc-title-link {
+		font-weight: bold;
+	    color: black; /* 링크 색상 */
+	    text-decoration: none; /* 밑줄 제거 */
+	    font-size: 12px; /* 텍스트 크기 */
+	    text-align: center; /* 텍스트 가운데 정렬 */
+	    cursor: pointer; /* 클릭 가능 표시 */
+	}
+	
+	.fc-title-link:hover {
+	    text-decoration: underline; /* 호버 시 밑줄 표시 */
+	    color: #0056b3; /* 호버 시 색상 변경 */
+	}
+	
+	

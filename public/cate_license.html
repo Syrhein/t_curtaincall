@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>라이센스 페이지</title>
+<link rel="stylesheet" href="./css/cate_license.css">
+<script src="./js/navigation.js"></script>
+</head>
+<body>
+
+<!-- 헤더 영역 -->
+<div data-layer="헤더영역 01" class="header">
+    <div data-layer="Frame1" class="Frame1">
+        <div data-layer="카테고리" class="categories">
+            <div data-layer="국내창작" class="category">국내창작</div>
+            <div data-layer="라이센스" class="category">라이센스</div>
+            <div data-layer="게시판" class="category">게시판</div>
+        </div>
+
+        <div data-layer="로고영역" class="logo">CURTAIN CALL GUIDE</div>
+
+        <div data-layer="buttons" class="Buttons">
+            <div data-layer="btn_sign up" class="BtnSignUp">
+                <div data-layer="SIGN UP" class="SignUp">회원가입</div>
+            </div>
+            <div data-layer="btn_login" class="BtnLogin">
+                <div data-layer="Login" class="Login">로그인</div>
+            </div>
+            <div data-layer="btn_logout" class="BtnLogout" style="display: none;">
+		        <div class="Logout">로그아웃</div>
+		    </div>
+            <img src="./img/icon_my.png" class="icon_my" alt="My Icon">
+        </div>
+    </div>
+</div>
+
+<!-- 컨테이너 영역 -->
+<div class="container">
+    <!-- 제목과 검색창 -->
+    <div class="cate_ttl">
+        <h1>라이센스</h1>
+        <input type="text" placeholder="작품명을 검색하세요">
+    </div>
+
+    <!-- 이미지 콘텐츠 그리드 -->
+    <div class="content-grid"></div>
+
+    <!-- 더보기 버튼 -->
+    <button class="more-button">더보기</button>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const contentGrid = document.querySelector('.content-grid');
+    const searchInput = document.querySelector('.cate_ttl input'); // 검색 필드
+    const moreButton = document.querySelector('.more-button');
+
+    let currentPage = 0;
+    const itemsPerPage = 10; // 한 페이지당 표시할 콘텐츠 수
+    let allData = []; // 서버에서 가져온 전체 데이터를 저장
+    let filteredData = []; // 검색 결과 데이터를 저장
+    let debounceTimeout; // 디바운싱 타이머
+
+    // 데이터 로드
+    fetch('http://localhost:8081/test1/MainCon') // 서버 URL
+        .then(response => response.json())
+        .then(data => {
+            // MUSICAL_CREATE='N' 조건 필터링
+            allData = data.filter(item => item.musicalCreate === 'N');
+            filteredData = allData; // 초기에는 전체 데이터를 필터링 데이터로 사용
+            renderPage(); // 첫 페이지 렌더링
+        })
+        .catch(error => console.error('Error loading data:', error));
+
+    // 현재 페이지 렌더링
+    function renderPage() {
+        const start = currentPage * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageData = filteredData.slice(start, end); // 현재 페이지 데이터
+
+        pageData.forEach(item => {
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('content-item');
+            contentDiv.innerHTML = `
+                <a href="detail.html?musicalId=${item.musicalId}&showIdx=${item.showIdx}">
+                    <img src="${item.musicalPoster}" alt="${item.musicalTitle}">
+                    <h3>${item.musicalTitle}</h3>
+                </a>
+            `;
+            contentGrid.appendChild(contentDiv);
+        });
+
+        // 더 이상 데이터가 없으면 더보기 버튼 숨기기
+        if (end >= filteredData.length) {
+            moreButton.style.display = 'none';
+        }
+    }
+
+    // 검색 필터링
+    function filterData(query) {
+        // 검색어가 없을 경우 전체 데이터를 사용
+        if (!query) {
+            filteredData = allData;
+        } else {
+            // 검색어와 제목 비교
+            filteredData = allData.filter(item =>
+                item.musicalTitle.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+
+        // 검색 결과를 기반으로 페이지 초기화
+        currentPage = 0;
+        contentGrid.innerHTML = ''; // 기존 콘텐츠 제거
+        moreButton.style.display = 'block'; // 더보기 버튼 다시 표시
+        renderPage();
+    }
+
+    // 검색 입력 이벤트에 디바운싱 적용
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout); // 이전 타이머 취소
+        debounceTimeout = setTimeout(() => {
+            const query = searchInput.value.trim(); // 검색어 가져오기
+            filterData(query); // 필터링 함수 호출
+        }, 300); // 300ms 대기
+    });
+
+    // 더보기 버튼 이벤트
+    moreButton.addEventListener('click', () => {
+        currentPage++;
+        renderPage();
+    });
+});
+</script>
+
+
+
+
+<script src="./js/common.js"></script>
+</body>
+</html>

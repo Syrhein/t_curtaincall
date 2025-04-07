@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="./css/login.css">
+    <script src="./js/navigation.js"></script>
+</head>
+<body>
+    <div class="Screen">
+        <div class="Frame2">
+            <div class="CurtainCallGuide">Curtain Call Guide</div>
+        </div>
+        <div class="Frame1">
+            <div class="LogInTxt">
+                <div class="LogIn">LOGIN</div>
+            </div>
+            <form action="LoginCon" method="post">
+                <div class="Frame3">
+                    <!-- 아이디 입력 -->
+                    <div class="InputId" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <img src="./img/icon_user.png" alt="User Icon" style="width: 20px; height: 20px;">
+                        <input type="text" name="userId" placeholder="아이디를 입력하세요." 
+                        style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
+                    </div>
+                    <!-- 비밀번호 입력 -->
+                    <div class="InputPw" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <img src="./img/icon_lock.png" alt="Lock Icon" style="width: 15px; height: 20px; margin-left: 3px; margin-right: 3px;">
+                        <input type="password" name="userPw" placeholder="비밀번호를 입력하세요." 
+                        style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
+                    </div>
+                    <!-- 로그인 버튼 -->
+                    <div class="BtnLogIn">
+                        <button style="flex: 1; width: 110px; height: 35px; background: #6d211f; color: white; font-weight: bold; border: none; border-radius: 5px;">
+                            LOGIN
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+ // 로고 메인화면 가기
+    document.querySelector('.CurtainCallGuide').addEventListener('click', () => {
+        window.location.href = 'Main.html' }); 
+        </script>
+</body>
+</html>

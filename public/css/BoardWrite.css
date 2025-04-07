@@ -1,0 +1,254 @@
+@font-face {
+    font-family: '프리텐다드고딕';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: '함박눈';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_HambakSnow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+    /* 헤더 스타일 */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;  
+    }
+
+    .Frame1 {
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* 로고 스타일 */
+    .logo {
+        font-family: '함박눈';
+        font-size: 27px;
+        color: #730000;
+    }
+
+    /* 카테고리 스타일 */
+    .categories {
+        display: flex;
+        gap: 40px;
+    }
+
+    .category {
+        color: black;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 20px 0;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    
+    .category:hover {
+        color: #6d211f;
+    }
+
+    .categories .category:nth-child(3) {
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    /* 버튼 스타일 */
+    .Buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    /* 회원가입 버튼 */
+    .BtnSignUp {
+        padding: 8px 8px;
+        background: rgba(217, 217, 217, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .SignUp {
+        text-align: center;
+        color: black;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.6px;
+    }
+
+    /* 로그인 버튼 */
+    .BtnLogin {
+        padding: 8px 20px;
+        background: rgba(217, 217, 217, 0);
+        border-radius: 50px;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .BtnLogin:hover {
+        background-color: #f0f0f0;
+    }
+
+    .Login {
+        text-align: center;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.66px;
+    }
+    
+    		    /* 로그아웃 버튼 */
+    .BtnLogout {
+        padding: 8px 20px;
+        background: rgba(217, 217, 217, 0);
+        border-radius: 50px;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .BtnLogout:hover {
+        background-color: #f0f0f0;
+    }
+
+    .Logout {
+        text-align: center;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: '프리텐다드고딕';
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0.66px;
+    }
+
+    .icon_my {
+    width: 26px;
+    height: 26px;
+    margin-top: 3px;
+    }
+
+
+    /* 게시판 영역 */
+    .container {
+        width: 1200px;
+        margin: 100px auto 0;
+        padding: 20px;
+        text-align: center;
+    }
+
+
+
+/* 기본 index.html에 연결된 style.css에 이하와 같이 작성 */
+
+.card-header1 h1 {
+    font-size: 25px;
+    font-weight: 600;
+    
+}
+
+/* a 태그의 기본 스타일 제거 */
+.card-header1 h1 a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 부모 요소의 색상 상속 */
+}
+
+
+.card-header1 h1 a:hover {
+    color: #6d211f; 
+}
+
+.card-write {
+    padding: 20px;
+}
+
+.card-write input,
+textarea {
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    
+}
+
+.card-write .myinfo input[type="text"] {
+    width: 25%;
+    margin-right: 200px;
+    margin-bottom: 15px;
+}
+
+.card-write .title-w input[type="text"] {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 85.5%;
+}
+
+.card-write .msg textarea {
+    min-width: 85.5%;
+    max-width: 85.5%;
+    min-height: 200px;
+    max-height: 200px;
+    box-shadow: inset 3px 3px 10px #e6e6e6;
+
+    /* vertical-align: 텍스트를 수직, 수평 정렬 할 수 있다. */
+    vertical-align: top;
+}
+
+.card-write input[type="file"] {
+    border: none;
+    box-shadow: none;
+    padding: 10px;
+    margin-left: 40px;
+}
+
+/* .btn-w 스타일 수정 */
+.btn-w {
+    margin-top: 20px;
+    text-align: right; /* 부모 요소에서 오른쪽 정렬 설정 */
+}
+
+.btn-w a {
+    text-decoration: none;
+    background-color: rgb(125, 125, 125);
+    display:inline-block;
+    padding: 13px 17px ;
+    color: #fff;
+    border-radius: 5px;
+    justify-content: right;
+}
+
+/* 호버 효과 추가 */
+.btn-w a:hover {
+    background-color: #6d211f;
+    color: #fff;
+}
+

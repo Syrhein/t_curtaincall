@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <link rel="stylesheet" href="./css/MyPage.css">
+    <script src="./js/navigation.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.4.0/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.4.0/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.4.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.4.0/main.min.js"></script>
+</head>
+<body>
+    <!-- 헤더 영역 -->
+    <div data-layer="헤더영역 01" class="header">
+        <div data-layer="Frame1" class="Frame1">
+            <div data-layer="카테고리" class="categories">
+                <div data-layer="국내창작" class="category">국내창작</div>
+                <div data-layer="라이센스" class="category">라이센스</div>
+                <div data-layer="게시판" class="category">게시판</div>
+            </div>
+
+            <div data-layer="로고영역" class="logo">CURTAIN CALL GUIDE</div>
+
+            <div data-layer="buttons" class="Buttons">
+                <div data-layer="btn_sign up" class="BtnSignUp">
+                    <div data-layer="SIGN UP" class="SignUp">회원가입</div>
+                </div>
+                <div data-layer="btn_login" class="BtnLogin">
+                    <div data-layer="Login" class="Login">로그인</div>
+                </div>
+                <div data-layer="btn_logout" class="BtnLogout" style="display: none;">
+		        <div data-layer="Logout" class="Logout">로그아웃</div>
+		    	</div>
+                <img src="./img/icon_my.png" class="icon_my" alt="My Icon">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 환경설정 아이콘 -->
+        <div class="Settings">
+            <img src="./img/icon_setting.png" alt="Settings Icon" class="settings-icon">
+        </div>
+    
+        <!-- 사용자 이름 및 이메일 -->
+        <div class="username">User name</div>
+        <div class="userid">User id</div>
+        
+        
+        <!-- 이름 변경 영역 -->
+		<div class="edit-user-info">
+		    <button class="edit-name-btn">이름 변경</button>
+		    <div class="edit-name-form" style="display: none;">
+		        <input type="text" class="new-name-input" placeholder="새 이름 입력">
+		        <button class="save-name-btn">저장</button>
+		        <button class="cancel-name-btn">취소</button>
+		    </div>
+		</div>
+    	
+    	<hr style="margin: 40px">
+        <!-- 위시리스트 영역 -->
+        <div class="stats">
+            <div class="stat-item">
+                <img src="./img/icon_heart.png" class="icon_heart" onclick="openFavoritePopup()">
+                <h3>관심</h3>
+            </div>
+            <div class="stat-item">
+                <img src="./img/icon_content.png" class="icon_content" onclick="openPostPopup()">
+                <h3>게시글</h3>   
+            </div>
+            <div class="stat-item">
+                <img src="./img/icon_comment.png" class="icon_review" onclick="openReviewPopup()">
+                <h3>리뷰</h3>
+            </div>
+        </div> 
+    </div>
+    
+    <!-- 캘린더 영역 -->
+    <div id="calendar"></div>
+    
+    <script src="./js/calendar.js"></script>
+    <script src="./js/common.js"></script>
+	
+	<script>
+    function openFavoritePopup() {
+        window.open(
+            'http://localhost:8081/test1/favoritePopup',
+            'favoritePopup',
+            'width=600,height=400,scrollbars=yes'
+        );
+    }
+    
+    function openPostPopup() {
+        window.open(
+            'http://localhost:8081/test1/postPopup',
+            'postPopup',
+            'width=600,height=400,scrollbars=yes'
+        );
+    }
+    
+    function openReviewPopup() {
+        window.open(
+            'http://localhost:8081/test1/reviewPopup',
+            'reviewPopup',
+            'width=800,height=600,scrollbars=yes'
+        );
+    }
+	</script>
+	
+	
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const usernameElement = document.querySelector('.username'); // 유저 이름을 표시할 요소
+        const useridElement = document.querySelector('.userid'); // 유저 ID를 표시할 요소
+
+        // 회원정보 로드
+        const loadUserInfo = () => {
+            fetch('http://localhost:8081/test1/CheckLoginCon')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.isLoggedIn) {
+                        // 유저 이름과 문구 설정
+	                    const userName = data.userName || 'Unknown'; // 유저 이름
+	                    usernameElement.textContent = `${userName}님의 마이페이지`; // 문구 포함
+	                    useridElement.textContent = data.userId || 'Unknown'; // 유저 ID 설정
+                    } else {
+                        alert(data.error || '로그인이 필요합니다!');
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user info:', error);
+                    alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                });
+        };
+
+        // 이름 변경 기능
+        const initEditNameFeature = () => {
+            const editNameBtn = document.querySelector('.edit-name-btn');
+            const editNameForm = document.querySelector('.edit-name-form');
+            const newNameInput = document.querySelector('.new-name-input');
+            const saveNameBtn = document.querySelector('.save-name-btn');
+            const cancelNameBtn = document.querySelector('.cancel-name-btn');
+
+            // 이름 변경 버튼 클릭 시 입력 필드 표시
+            editNameBtn.addEventListener('click', () => {
+                editNameForm.style.display = 'block';
+                newNameInput.value = ''; // 입력 필드 초기화
+            });
+
+            // 취소 버튼 클릭 시 입력 필드 숨기기
+            cancelNameBtn.addEventListener('click', () => {
+                editNameForm.style.display = 'none';
+            });
+
+            // 저장 버튼 클릭 시 서버로 이름 변경 요청
+            saveNameBtn.addEventListener('click', () => {
+                const newName = newNameInput.value.trim();
+                if (newName) {
+                    fetch('http://localhost:8081/test1/UpdateUserNameCon', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId: useridElement.textContent, userName: newName }),
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                alert('이름이 성공적으로 변경되었습니다!');
+                                usernameElement.textContent = `${newName}님의 마이페이지`; // 이름 변경 후 문구 업데이트
+                                editNameForm.style.display = 'none';
+                            } else {
+                                alert(data.error || '이름 변경에 실패했습니다.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating name:', error);
+                            alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                        });
+                } else {
+                    alert('새 이름을 입력해주세요.');
+                }
+            });
+        };
+
+        // 초기화
+        loadUserInfo();
+        initEditNameFeature();
+    });
+
+    </script>
+</body>
+</html>
