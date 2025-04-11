@@ -42,7 +42,8 @@ router.get('/:musicalId/:showIdx', async (req, res) => {
           S.SHOW_DT AS showDt,
           S.SHOW_RUNTIME AS showRuntime,
           S.SHOW_PRICE AS showPrice,
-          S.SHOW_IMGS AS showImgs
+          S.SHOW_IMGS AS showImgs,
+          S.SHOW_VIEWS AS showViews
         FROM TB_MUSICAL M
         JOIN TB_SHOW S ON M.MUSICAL_ID = S.MUSICAL_ID
         WHERE M.MUSICAL_ID = ? AND S.SHOW_IDX = ?
@@ -56,6 +57,33 @@ router.get('/:musicalId/:showIdx', async (req, res) => {
       res.json(rows[0]);
     } catch (err) {
       console.error('❌ 상세 조회 오류:', err.message);
+      res.status(500).json({ message: '서버 오류' });
+    }
+  });
+  
+
+  // 📌 조회수 증가 라우터 추가
+router.post('/views', async (req, res) => {
+    const { musicalId } = req.body;
+  
+    if (!musicalId) {
+      return res.status(400).json({ message: '뮤지컬 ID가 필요합니다.' });
+    }
+  
+    try {
+      const [result] = await db.query(`
+        UPDATE TB_SHOW
+        SET SHOW_VIEWS = IFNULL(SHOW_VIEWS, 0) + 1
+        WHERE MUSICAL_ID = ?
+      `, [musicalId]);
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: '해당 뮤지컬을 찾을 수 없습니다.' });
+      }
+  
+      res.json({ message: '조회수 증가 성공' });
+    } catch (err) {
+      console.error('❌ 조회수 증가 실패:', err.message);
       res.status(500).json({ message: '서버 오류' });
     }
   });
