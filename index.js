@@ -24,10 +24,12 @@ const slideRoutes = require('./routes/slides');
 const signupRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
 const musicalRoutes = require('./routes/musicals');
+const favoriteRoutes = require('./routes/favorite');
 app.use('/api/slides', slideRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/signup', signupRoutes);
 app.use('/api/musicals', musicalRoutes);
+app.use('/api/favorite', favoriteRoutes);
 
 // 기본 경로
 app.get('/', (req, res) => { // 루트 경로 / 에 접속시 보내줄 응답

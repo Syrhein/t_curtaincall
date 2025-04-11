@@ -188,7 +188,7 @@
             const favoriteIcon = document.getElementById("favoriteIcon");
             const addFavoriteButton = document.getElementById("addFavoriteButton");
 
-            fetch(`CheckFavoriteServlet?userId=${userId}&showIdx=${showIdx}`)
+            fetch(`/api/favorite?userId=${userId}&showIdx=${showIdx}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.isFavorite) {
@@ -204,10 +204,10 @@
             addFavoriteButton.addEventListener("click", () => {
                 const action = addFavoriteButton.dataset.action;
 
-                fetch("FavoriteServlet", {
+                fetch("/api/favorite", {
                     method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `userId=${userId}&showIdx=${showIdx}&action=${action}`
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({userId, showIdx, action})
                 })
                     .then(response => response.json())
                     .then(data => {
