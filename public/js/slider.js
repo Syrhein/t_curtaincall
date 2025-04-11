@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0; // 첫 번째 이미지부터 시작 (인덱스는 0부터 시작)
 
     // 서버에서 슬라이드 데이터 로드
-    fetch('http://localhost:8081/test1/SlideDataServlet')
+    fetch('/api/slides')
         .then(response => response.json())
         .then(data => {
             slideTrack.innerHTML = ''; // 기존 슬라이드 초기화

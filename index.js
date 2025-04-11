@@ -1,14 +1,18 @@
-// index.js
 const express = require('express'); // 서버 만드는 라이브러리
 const path = require('path');
 const app = express(); // 서버 인스턴스를 app에 담기
 const PORT = 3000; // 포트 설정 http://localhost:3000
 
-const musicalRoutes = require('./routes/musicals'); // 다른 라우터 불러오기
+// 정적 파일 경로
+app.use(express.static(path.join(__dirname, 'public'))); 
 
-app.use(express.json()); // request에 담긴 json을 읽게 해주는 미들웨어
+// request에 담긴 json을 읽게 해주는 미들웨어
+app.use(express.json()); 
 
-app.use(express.static(path.join(__dirname, 'public'))); // 정적 파일 경로
+// API 라우터 연결
+const slideRoutes = require('./routes/slides');
+app.use('/api/slides', slideRoutes);
+
 
 // 기본 경로
 app.get('/', (req, res) => { // 루트 경로 / 에 접속시 보내줄 응답
