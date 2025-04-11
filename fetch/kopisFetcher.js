@@ -45,12 +45,70 @@ async function fetchMusicalList(page = 1, rows = 10) {
     }
 }
 
-// 테스트 실행
+// 상세 공연 정보 가져오기
+async function fetchMusicalDetail(mt20id) {
+    const url = `http://kopis.or.kr/openApi/restful/pblprfr/${mt20id}?service=${SERVICE_KEY}`;
+  
+    try {
+      const response = await axios.get(url);
+      const parser = new xml2js.Parser({ explicitArray: false });
+      const result = await parser.parseStringPromise(response.data);
+  
+      const detail = result.dbs?.db;
+      if (!detail) {
+        console.warn(`⚠️ ${mt20id} 상세 정보 없음`);
+        return null;
+      }
+  
+      const prfcast = detail.prfcast?.trim();
+      if (!prfcast || prfcast === 'N/A') {
+        console.log(`🚫 출연진 없음 → ${mt20id} 제외`);
+        return null;
+      }
+  
+      // 포스터 이미지 여러 개 처리 (styurls → styurl[])
+      let styurls = '없음';
+      if (detail.styurls?.styurl) {
+        const urls = Array.isArray(detail.styurls.styurl)
+          ? detail.styurls.styurl
+          : [detail.styurls.styurl];
+        styurls = urls.filter(Boolean).join('; ');
+      }
+  
+      // 반환할 공연 상세 객체 구성
+      return {
+        mt20id,
+        prfnm: detail.prfnm,
+        poster: detail.poster,
+        prfpdfrom: detail.prfpdfrom,
+        prfpdto: detail.prfpdto,
+        prfcast,
+        fcltynm: detail.fcltynm || 'N/A',
+        dtguidance: detail.dtguidance || 'N/A',
+        prfruntime: detail.prfruntime || 'N/A',
+        pcseguidance: detail.pcseguidance || 'N/A',
+        styurls,
+        musicallicense: detail.musicallicense || 'N/A',
+        musicalcreate: detail.musicalcreate || 'N/A',
+      };
+    } catch (err) {
+      console.error(`❌ 상세 API 실패 (${mt20id}):`, err.message);
+      return null;
+    }
+  }
+  
+
 (async () => {
-    const musicals = await fetchMusicalList(1, 10);
-    console.log(musicals);
-})();
-
-
-
+    const musicalList = await fetchMusicalList(1, 10); // 10개 기준
+  
+    const result = [];
+    for (const item of musicalList) {
+      const detail = await fetchMusicalDetail(item.mt20id);
+      if (detail) result.push(detail);
+    }
+  
+    console.log(`🎉 최종 수집 공연 수: ${result.length}`);
+    console.dir(result, { depth: null });
+  })();
+  
 
