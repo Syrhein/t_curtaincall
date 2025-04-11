@@ -2,51 +2,51 @@
 const axios = require('axios');
 const xml2js = require('xml2js');
 
+const { saveAllToDB } = require('./saveToDB');
 require('dotenv').config(); // .env 파일의 내용을 읽어와서 process.env에 등록함
 
 const SERVICE_KEY = process.env.SERVICE_KEY; // 안전하게 키를 불러옴
-
 const BASE_URL = 'http://kopis.or.kr/openApi/restful/pblprfr';
 const std= '20250401';
 const edd= '20250430';
 
 
 
-// 데이터 가져오기
+// 목록 API 호출
 async function fetchMusicalList(page = 1, rows = 10) {
     const url = `${BASE_URL}?service=${SERVICE_KEY}&stdate=${std}&eddate=${edd}&cpage=${page}&rows=${rows}&shcate=GGGA`;
-    
-    try{
-        const response = await axios.get(url);
-        const parser = new xml2js.Parser({ explicitArray: false});
-        const result = await parser.parseStringPromise(response.data);
-
-        const musicals = result.dbs?.db;
-        if (!musicals) {
-            console.log('더 이상 데이터 없음')
-            return [];
-        }
-        
-        const cleanList = Array.isArray(musicals) ? musicals : [musicals];
-        const extracted = cleanList.map(item => ({
-            mt20id : item.mt20id,
-            prfnm : item.prfnm,
-            poster : item.poster,
-            prfpdfrom : item.prfpdfrom,
-            prfpdto : item.prfpdto
-        }));
-
-        console.log(`page ${page} 공연 ${extracted.length}개 수집`);
-        return extracted;
-
-    }catch (err) {
-        console.log(`목록 API 호출 실패 (page ${page})`, err.message);
+  
+    try {
+      const response = await axios.get(url);
+      const parser = new xml2js.Parser({ explicitArray: false });
+      const result = await parser.parseStringPromise(response.data);
+  
+      const musicals = result.dbs?.db;
+      if (!musicals) {
+        console.log('📭 더 이상 데이터 없음');
         return [];
+      }
+  
+      const cleanList = Array.isArray(musicals) ? musicals : [musicals];
+      const extracted = cleanList.map(item => ({
+        mt20id: item.mt20id,
+        prfnm: item.prfnm,
+        poster: item.poster,
+        prfpdfrom: item.prfpdfrom,
+        prfpdto: item.prfpdto
+      }));
+  
+      console.log(`📄 page ${page} → ${extracted.length}개 공연`);
+      return extracted;
+  
+    } catch (err) {
+      console.log(`❌ 목록 API 실패 (page ${page})`, err.message);
+      return [];
     }
-}
-
-// 상세 공연 정보 가져오기
-async function fetchMusicalDetail(mt20id) {
+  }
+  
+  // 상세 API 호출
+  async function fetchMusicalDetail(mt20id) {
     const url = `http://kopis.or.kr/openApi/restful/pblprfr/${mt20id}?service=${SERVICE_KEY}`;
   
     try {
@@ -56,17 +56,17 @@ async function fetchMusicalDetail(mt20id) {
   
       const detail = result.dbs?.db;
       if (!detail) {
-        console.warn(`⚠️ ${mt20id} 상세 정보 없음`);
+        console.warn(`⚠️ ${mt20id} 상세 없음`);
         return null;
       }
   
       const prfcast = detail.prfcast?.trim();
       if (!prfcast || prfcast === 'N/A') {
-        console.log(`🚫 출연진 없음 → ${mt20id} 제외`);
+        console.log(`🚫 출연진 없음 → ${mt20id}`);
         return null;
       }
   
-      // 포스터 이미지 여러 개 처리 (styurls → styurl[])
+      // 포스터 이미지 처리
       let styurls = '없음';
       if (detail.styurls?.styurl) {
         const urls = Array.isArray(detail.styurls.styurl)
@@ -75,7 +75,6 @@ async function fetchMusicalDetail(mt20id) {
         styurls = urls.filter(Boolean).join('; ');
       }
   
-      // 반환할 공연 상세 객체 구성
       return {
         mt20id,
         prfnm: detail.prfnm,
@@ -97,18 +96,37 @@ async function fetchMusicalDetail(mt20id) {
     }
   }
   
-
-(async () => {
-    const musicalList = await fetchMusicalList(1, 10); // 10개 기준
+  // 전체 페이지 수집 + 병렬 처리
+  async function collectAllMusicals(rowsPerPage = 10, maxPages = 100) {
+    let page = 1;
+    const allMusicals = [];
   
-    const result = [];
-    for (const item of musicalList) {
-      const detail = await fetchMusicalDetail(item.mt20id);
-      if (detail) result.push(detail);
+    while (page <= maxPages) {
+      const list = await fetchMusicalList(page, rowsPerPage);
+      if (list.length === 0) break;
+  
+      console.log(`🔍 상세 API 병렬 호출 중 (page ${page})...`);
+      const details = await Promise.all(
+        list.map(item => fetchMusicalDetail(item.mt20id))
+      );
+  
+      const valid = details.filter(Boolean);
+      allMusicals.push(...valid);
+  
+      console.log(`✅ 유효 공연: ${valid.length}개 / 누적: ${allMusicals.length}개`);
+      page++;
     }
   
-    console.log(`🎉 최종 수집 공연 수: ${result.length}`);
-    console.dir(result, { depth: null });
+    return allMusicals;
+  }
+  
+  // 실행
+  (async () => {
+    const all = await collectAllMusicals(10, 100); // 이미 만들어둔 전체 수집 함수
+    console.log(`🎯 총 ${all.length}개 공연 수집됨 → DB 저장 시작`);
+    await saveAllToDB(all);
+    console.log('🎉 모든 데이터 저장 완료!');
   })();
+  
   
 
