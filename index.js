@@ -9,6 +9,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // request에 담긴 json을 읽게 해주는 미들웨어
 app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); // 폼 전송도 가능하게
+
+// ✅ 세션 설정 (추가!)
+app.use(session({
+  secret: 'curtaincall-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 1000 * 60 * 60 } // 1시간
+}));
 
 // API 라우터 연결
 const slideRoutes = require('./routes/slides');

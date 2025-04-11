@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="./css/login.css">
     <script src="./js/navigation.js"></script>
 </head>
+
 <body>
     <div class="Screen">
         <div class="Frame2">
@@ -16,35 +18,64 @@
             <div class="LogInTxt">
                 <div class="LogIn">LOGIN</div>
             </div>
-            <form action="LoginCon" method="post">
-                <div class="Frame3">
-                    <!-- 아이디 입력 -->
-                    <div class="InputId" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                        <img src="./img/icon_user.png" alt="User Icon" style="width: 20px; height: 20px;">
-                        <input type="text" name="userId" placeholder="아이디를 입력하세요." 
+            <div class="Frame3">
+                <!-- 아이디 입력 -->
+                <div class="InputId" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                    <img src="./img/icon_user.png" alt="User Icon" style="width: 20px; height: 20px;">
+                    <input type="text" id="userId" placeholder="아이디를 입력하세요."
                         style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
-                    </div>
-                    <!-- 비밀번호 입력 -->
-                    <div class="InputPw" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                        <img src="./img/icon_lock.png" alt="Lock Icon" style="width: 15px; height: 20px; margin-left: 3px; margin-right: 3px;">
-                        <input type="password" name="userPw" placeholder="비밀번호를 입력하세요." 
-                        style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
-                    </div>
-                    <!-- 로그인 버튼 -->
-                    <div class="BtnLogIn">
-                        <button style="flex: 1; width: 110px; height: 35px; background: #6d211f; color: white; font-weight: bold; border: none; border-radius: 5px;">
-                            LOGIN
-                        </button>
-                    </div>
                 </div>
-            </form>
+                <!-- 비밀번호 입력 -->
+                <div class="InputPw" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                    <img src="./img/icon_lock.png" alt="Lock Icon"
+                        style="width: 15px; height: 20px; margin-left: 3px; margin-right: 3px;">
+                    <input type="password" id="userPw" placeholder="비밀번호를 입력하세요."
+                        style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
+                </div>
+                <!-- 로그인 버튼 -->
+                <div class="BtnLogIn">
+                    <button id="loginBtn"
+                        style="flex: 1; width: 110px; height: 35px; background: #6d211f; color: white; font-weight: bold; border: none; border-radius: 5px;">
+                        LOGIN
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-    
+
     <script>
- // 로고 메인화면 가기
-    document.querySelector('.CurtainCallGuide').addEventListener('click', () => {
-        window.location.href = 'Main.html' }); 
-        </script>
+        document.querySelector('#loginBtn').addEventListener('click', async (e) => {
+            e.preventDefault(); // 폼 기본 동작 방지
+
+            const userId = document.querySelector('#userId').value;
+            const userPw = document.querySelector('#userPw').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, userPw })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    alert('🎉 로그인 성공!');
+                    location.href = '/Main.html';
+                } else {
+                    alert('⚠️ ' + data.message);
+                }
+            } catch (err) {
+                alert('❌ 로그인 요청 실패: ' + err.message);
+            }
+        });
+
+        // 메인화면 이동
+        document.querySelector('.CurtainCallGuide').addEventListener('click', () => {
+            window.location.href = 'Main.html';
+        });
+
+    </script>
+
 </body>
+
 </html>
