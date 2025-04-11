@@ -1,378 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>상세페이지</title>
-<link rel="stylesheet" href="./css/detail.css">
-<script src="./js/common.js"></script>
-<script src="./js/navigation.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세페이지</title>
+    <link rel="stylesheet" href="./css/detail.css">
+    <script src="./js/common.js"></script>
+    <script src="./js/navigation.js"></script>
 </head>
+
 <body>
-	<!-- 헤더 영역 -->
-	<div class="header">
-		<div class="Frame1">
-			<div class="categories">
-				<div class="category">국내창작</div>
-				<div class="category">라이센스</div>
-				<div class="category">게시판</div>
-			</div>
-			<div class="logo">CURTAIN CALL GUIDE</div>
-			<div class="Buttons">
-				<div class="BtnSignUp">
-					<div class="SignUp">회원가입</div>
-				</div>
-				<div class="BtnLogin">
-					<div class="Login">로그인</div>
-				</div>
-				<div data-layer="btn_logout" class="BtnLogout"
-					style="display: none;">
-					<div class="Logout">로그아웃</div>
-				</div>
-				<img src="./img/icon_my.png" class="icon_my" alt="My Icon">
-			</div>
-		</div>
-	</div>
+    <!-- 헤더 영역 -->
+    <div class="header">
+        <div class="Frame1">
+            <div class="categories">
+                <div class="category">국내창작</div>
+                <div class="category">라이센스</div>
+                <div class="category">게시판</div>
+            </div>
+            <div class="logo">CURTAIN CALL GUIDE</div>
+            <div class="Buttons">
+                <div class="BtnSignUp">
+                    <div class="SignUp">회원가입</div>
+                </div>
+                <div class="BtnLogin">
+                    <div class="Login">로그인</div>
+                </div>
+                <div data-layer="btn_logout" class="BtnLogout" style="display: none;">
+                    <div class="Logout">로그아웃</div>
+                </div>
+                <img src="./img/icon_my.png" class="icon_my" alt="My Icon">
+            </div>
+        </div>
+    </div>
 
-	<!-- 공연 정보 영역 -->
-	<div class="container">
-		<div class="show_settings">
-			<div class="show_poster">
-				<img id="musicalPoster" src="" alt="Show Poster">
-			</div>
-			<div class="show_info">
-				<h1 id="musicalTitle">TITLE</h1>
-				<div class="tags">
-					<span>#카테고리</span>
-				</div>
-				<div class="show_schedule">
-					<div id="hallName" class="show_schedule_list">공연장:</div>
-					<div id="musicalStDt" class="show_schedule_st">상영 시작일:</div>
-					<div id="musicalEdDt" class="show_schedule_dt">상영 종료일:</div>
-					<div id="showDate" class="show_schedule_list">상영일:</div>
-					<div id="showRuntime" class="show_schedule_list">런타임:</div>
-					<div id="showPrice" class="show_schedule_list">가격:</div>
-					<div id="showViews" class="show_schedule_list">조회수:</div>
-				</div>
-				<div class="toggle-dscrp">
-					<button class="toggle-button" id="toggleDetailsButton">작품
-						상세정보 보기</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- 공연 정보 영역 -->
+    <div class="container">
+        <div class="show_settings">
+            <div class="show_poster">
+                <img id="musicalPoster" src="" alt="Show Poster">
+            </div>
+            <div class="show_info">
+                <h1 id="musicalTitle">TITLE</h1>
+                <div class="tags">
+                    <span>#카테고리</span>
+                </div>
+                <div class="show_schedule">
+                    <div id="hallName" class="show_schedule_list">공연장:</div>
+                    <div id="musicalStDt" class="show_schedule_st">상영 시작일:</div>
+                    <div id="musicalEdDt" class="show_schedule_dt">상영 종료일:</div>
+                    <div id="showDate" class="show_schedule_list">상영일:</div>
+                    <div id="showRuntime" class="show_schedule_list">런타임:</div>
+                    <div id="showPrice" class="show_schedule_list">가격:</div>
+                    <div id="showViews" class="show_schedule_list">조회수:</div>
+                </div>
+                <div class="toggle-dscrp">
+                    <button class="toggle-button" id="toggleDetailsButton">작품
+                        상세정보 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<!-- 팝업 및 오버레이 영역 -->
-	<div id="popupOverlay" class="popup-overlay" style="display: none;"></div>
-	<div id="popup" class="popup" style="display: none;">
-		<div class="popup-header">
-			<span>작품 상세정보</span>
-			<button id="popupClose" class="popup-close">&times;</button>
-		</div>
-		<div class="popup-content" id="popupContent"></div>
-	</div>
+    <!-- 팝업 및 오버레이 영역 -->
+    <div id="popupOverlay" class="popup-overlay" style="display: none;"></div>
+    <div id="popup" class="popup" style="display: none;">
+        <div class="popup-header">
+            <span>작품 상세정보</span>
+            <button id="popupClose" class="popup-close">&times;</button>
+        </div>
+        <div class="popup-content" id="popupContent"></div>
+    </div>
 
-	<!-- 위시리스트 영역 -->
-	<div class="stats">
-		<div class="stat-item">
-			<button id="addFavoriteButton" class="favorite-button">
-				<img id="favoriteIcon" src="./img/icon_heart.png" class="icon_heart"
-					alt="관심 등록">
-			</button>
-			<h3>관심</h3>
-		</div>
-	</div>
-	<!-- 리뷰 시도라도 해봄 -->
-	<!-- 리뷰 작성 폼 -->
-	<form id="reviewForm">
-		<!-- showIdx를 hidden input으로 추가 -->
-		<input type="hidden" id="showIdx" name="showIdx" value="">
-		<textarea name="reviewContent" placeholder="리뷰를 입력하세요" required></textarea>
-		<label for="reviewStar">평점 (1-5):</label> <input type="number"
-			name="reviewStar" min="1" max="5" required>
-		<button id="submitReviewButton" type="button">리뷰 작성</button>
-	</form>
-	<div id="reviewMessage"></div>
+    <!-- 위시리스트 영역 -->
+    <div class="stats">
+        <div class="stat-item">
+            <button id="addFavoriteButton" class="favorite-button">
+                <img id="favoriteIcon" src="./img/icon_heart.png" class="icon_heart" alt="관심 등록">
+            </button>
+            <h3>관심</h3>
+        </div>
+    </div>
+    <!-- 리뷰 시도라도 해봄 -->
+    <!-- 리뷰 작성 폼 -->
+    <form id="reviewForm">
+        <!-- showIdx를 hidden input으로 추가 -->
+        <input type="hidden" id="showIdx" name="showIdx" value="">
+        <textarea name="reviewContent" placeholder="리뷰를 입력하세요" required></textarea>
+        <label for="reviewStar">평점 (1-5):</label> <input type="number" name="reviewStar" min="1" max="5" required>
+        <button id="submitReviewButton" type="button">리뷰 작성</button>
+    </form>
+    <div id="reviewMessage"></div>
 
 
-	<!-- 리뷰 조회 테이블  -->
-	<div id="reviewSection" class="review-section">
-		<!-- JavaScript로 리뷰 데이터가 추가될 예정 -->
-		<h3>리뷰 조회</h3>
-	</div>
+    <!-- 리뷰 조회 테이블  -->
+    <div id="reviewSection" class="review-section">
+        <!-- JavaScript로 리뷰 데이터가 추가될 예정 -->
+        <h3>리뷰 조회</h3>
+    </div>
 
 
 
 
 
 
-	<!-- JavaScript -->
-	<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const musicalId = urlParams.get("musicalId");
-        const showIdx = urlParams.get("showIdx");
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const musicalId = urlParams.get("musicalId");
+            const showIdx = urlParams.get("showIdx");
 
-        if (!musicalId || !showIdx) {
-            alert("뮤지컬 정보를 확인할 수 없습니다. URL을 다시 확인하세요.");
-            window.location.href = "Main.html";
-            return;
+            if (!musicalId || !showIdx) {
+                alert("뮤지컬 정보를 확인할 수 없습니다. URL을 다시 확인하세요.");
+                window.location.href = "Main.html";
+                return;
+            }
+
+            // 로그인 상태 확인
+            fetch('/api/login/status', {
+                credentials: 'include' // ✅ 세션 유지에 필수!
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.loggedIn) {
+                        const userId = data.user.id; // 세션의 user 객체에서 id 꺼냄
+                        initializePage(musicalId, showIdx, userId);
+                    } else {
+                        alert("로그인이 필요합니다.");
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => console.error("로그인 상태 확인 중 오류:", error));
+
+        });
+
+        function initializePage(musicalId, showIdx, userId) {
+            console.log("Page Initialization 시작");
+            document.getElementById("showIdx").value = showIdx;
+            incrementViews(musicalId);
+            fetchMusicalDetails(musicalId, showIdx);
+            initializeFavoriteFeature(showIdx, userId);
+            initializeReviewFeature(showIdx, userId);
+            fetchReviews(showIdx);
+            initializePopup();
         }
 
-        // 로그인 상태 확인
-        fetch('http://localhost:8081/test1/CheckLoginCon')
-            .then(response => response.json())
-            .then(data => {
-                if (data.isLoggedIn) {
-                    const userId = data.userId;
-                    initializePage(musicalId, showIdx, userId);
-                } else {
-                    alert("로그인이 필요합니다.");
-                    window.location.href = 'login.html';
-                }
+        function incrementViews(musicalId) {
+            fetch(`api/musicals/views`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ musicalId })
             })
-            .catch(error => console.error("로그인 상태 확인 중 오류:", error));
-    });
+                .then(response => response.json())
+                .then(data => console.log("조회수 증가 성공:", data))
+                .catch(error => console.error("조회수 증가 요청 중 에러 발생:", error));
+        }
 
-    function initializePage(musicalId, showIdx, userId) {
-        console.log("Page Initialization 시작");
-        document.getElementById("showIdx").value = showIdx;
-        incrementViews(musicalId);
-        fetchMusicalDetails(musicalId);
-        initializeFavoriteFeature(showIdx, userId);
-        initializeReviewFeature(showIdx, userId);
-        fetchReviews(showIdx);
-        initializePopup();
-    }
+        function fetchMusicalDetails(musicalId, showIdx) {
+            fetch(`/api/musicals/${musicalId}/${showIdx}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("musicalTitle").innerText = data.musicalTitle;
+                    document.getElementById("musicalPoster").src = data.musicalPoster;
+                    document.getElementById("hallName").innerText = `공연장: ${data.hallName}`;
+                    document.getElementById("musicalStDt").innerText = `상영 시작일: ${data.musicalStDt}`;
+                    document.getElementById("musicalEdDt").innerText = `상영 종료일: ${data.musicalEdDt}`;
+                    document.getElementById("showDate").innerText = `상영일: ${data.showDt}`;
+                    document.getElementById("showRuntime").innerText = `런타임: ${data.showRuntime}`;
+                    document.getElementById("showPrice").innerText = `가격: ${data.showPrice}`;
+                    document.getElementById("showViews").innerText = `조회수: ${data.showViews}`;
 
-    function incrementViews(musicalId) {
-        fetch(`http://localhost:8081/test1/IncrementViewCon`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ musicalId })
-        })
-        .then(response => response.json())
-        .then(data => console.log("조회수 증가 성공:", data))
-        .catch(error => console.error("조회수 증가 요청 중 에러 발생:", error));
-    }
+                    // 상세 이미지 팝업
+                    document.getElementById('toggleDetailsButton').addEventListener('click', () => {
+                        const popupContent = document.getElementById('popupContent');
+                        popupContent.innerHTML = `<img src="${data.showImgs}" alt="작품 상세 이미지">`;
+                        document.getElementById('popup').style.display = 'block';
+                        document.getElementById('popupOverlay').style.display = 'block';
+                    });
+                })
+                .catch(error => console.error("뮤지컬 상세 정보 가져오기 실패:", error));
+        }
 
-    function fetchMusicalDetails(musicalId) {
-        fetch(`http://localhost:8081/test1/MusicalDetail_CON?musicalId=${musicalId}&showDetails=true`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    throw new Error(data.error);
-                }
 
-                document.getElementById("musicalTitle").innerText = data.musicalTitle;
-                document.getElementById("musicalPoster").src = data.musicalPoster;
-                document.getElementById("hallName").innerText = `공연장: ${data.hallName}`;
-                document.getElementById("musicalStDt").innerText = `상영 시작일: ${data.musicalStDt}`;
-                document.getElementById("musicalEdDt").innerText = `상영 종료일: ${data.musicalEdDt}`;
-                document.getElementById("showDate").innerText = `상영일: ${data.showDate}`;
-                document.getElementById("showRuntime").innerText = `런타임: ${data.showRuntime}`;
-                document.getElementById("showPrice").innerText = `가격: ${data.showPrice}`;
-                document.getElementById("showViews").innerText = `조회수: ${data.showViews}`;
+        function initializeFavoriteFeature(showIdx, userId) {
+            const favoriteIcon = document.getElementById("favoriteIcon");
+            const addFavoriteButton = document.getElementById("addFavoriteButton");
 
-                document.getElementById('toggleDetailsButton').addEventListener('click', () => {
-                    const popupContent = document.getElementById('popupContent');
-                    popupContent.innerHTML = `<img src="${data.showImg}" alt="작품 상세 이미지">`;
-                    document.getElementById('popup').style.display = 'block';
-                    document.getElementById('popupOverlay').style.display = 'block';
-                });
-            })
-            .catch(error => console.error("뮤지컬 상세 정보 가져오기 실패:", error));
-    }
-
-    function initializeFavoriteFeature(showIdx, userId) {
-        const favoriteIcon = document.getElementById("favoriteIcon");
-        const addFavoriteButton = document.getElementById("addFavoriteButton");
-
-        fetch(`CheckFavoriteServlet?userId=${userId}&showIdx=${showIdx}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.isFavorite) {
-                    favoriteIcon.src = "./img/icon_heart_filled.png";
-                    addFavoriteButton.dataset.action = "remove";
-                } else {
-                    favoriteIcon.src = "./img/icon_heart.png";
-                    addFavoriteButton.dataset.action = "add";
-                }
-            })
-            .catch(error => console.error("초기 관심 상태 확인 중 에러 발생:", error));
-
-        addFavoriteButton.addEventListener("click", () => {
-            const action = addFavoriteButton.dataset.action;
-
-            fetch("FavoriteServlet", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `userId=${userId}&showIdx=${showIdx}&action=${action}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (action === "add") {
+            fetch(`CheckFavoriteServlet?userId=${userId}&showIdx=${showIdx}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isFavorite) {
                         favoriteIcon.src = "./img/icon_heart_filled.png";
                         addFavoriteButton.dataset.action = "remove";
-                    } else if (action === "remove") {
+                    } else {
                         favoriteIcon.src = "./img/icon_heart.png";
                         addFavoriteButton.dataset.action = "add";
                     }
-                } else {
-                    console.error("작업 실패:", data.error);
-                }
-            })
-            .catch(error => console.error("관심 등록/취소 요청 중 에러 발생:", error));
-        });
-    }
+                })
+                .catch(error => console.error("초기 관심 상태 확인 중 에러 발생:", error));
 
-    function initializeReviewFeature(showIdx, userId) {
-        const reviewButton = document.getElementById("submitReviewButton");
-        const reviewForm = document.getElementById("reviewForm");
-        const reviewMessage = document.getElementById("reviewMessage");
+            addFavoriteButton.addEventListener("click", () => {
+                const action = addFavoriteButton.dataset.action;
 
-        reviewButton.addEventListener("click", () => {
-            const formData = new FormData(reviewForm);
-            formData.append("showIdx", showIdx);
-            formData.append("userId", userId);
-
-            const dataToSend = new URLSearchParams();
-            for (const [key, value] of formData) {
-                dataToSend.append(key, value);
-            }
-
-            fetch("http://localhost:8081/test1/ReviewWriteCon", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: dataToSend.toString(),
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    reviewMessage.textContent = "리뷰 작성 성공!";
-                    reviewMessage.style.color = "green";
-                    reviewForm.reset();
-                    fetchReviews(showIdx);
-                } else {
-                    reviewMessage.textContent = `리뷰 작성 실패: ${result.error || "알 수 없는 오류"}`;
-                    reviewMessage.style.color = "red";
-                }
-            })
-            .catch(error => {
-                console.error("리뷰 작성 중 오류 발생:", error);
-                reviewMessage.textContent = "리뷰 작성 중 오류가 발생했습니다. 다시 시도하세요.";
-                reviewMessage.style.color = "red";
+                fetch("FavoriteServlet", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `userId=${userId}&showIdx=${showIdx}&action=${action}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (action === "add") {
+                                favoriteIcon.src = "./img/icon_heart_filled.png";
+                                addFavoriteButton.dataset.action = "remove";
+                            } else if (action === "remove") {
+                                favoriteIcon.src = "./img/icon_heart.png";
+                                addFavoriteButton.dataset.action = "add";
+                            }
+                        } else {
+                            console.error("작업 실패:", data.error);
+                        }
+                    })
+                    .catch(error => console.error("관심 등록/취소 요청 중 에러 발생:", error));
             });
-        });
-    }
+        }
 
-    function fetchReviews(showIdx) {
-        fetch(`http://localhost:8081/test1/ReviewListCon?showIdx=${showIdx}`)
-            .then(response => response.json())
-            .then(reviews => {
-                const reviewContainer = document.getElementById("reviewSection");
-                reviewContainer.innerHTML = "";
+        function initializeReviewFeature(showIdx, userId) {
+            const reviewButton = document.getElementById("submitReviewButton");
+            const reviewForm = document.getElementById("reviewForm");
+            const reviewMessage = document.getElementById("reviewMessage");
 
-                if (reviews.length === 0) {
-                    reviewContainer.innerHTML = "<p>아직 작성된 리뷰가 없습니다.</p>";
-                    return;
+            reviewButton.addEventListener("click", () => {
+                const formData = new FormData(reviewForm);
+                formData.append("showIdx", showIdx);
+                formData.append("userId", userId);
+
+                const dataToSend = new URLSearchParams();
+                for (const [key, value] of formData) {
+                    dataToSend.append(key, value);
                 }
 
-                reviews.forEach(review => {
-                    console.log("서버에서 받은 리뷰 데이터:", review); // 서버에서 받은 데이터 확인
-                    const reviewElement = document.createElement("div");
-                    reviewElement.classList.add("review");
-                    reviewElement.innerHTML = `
+                fetch("http://localhost:8081/test1/ReviewWriteCon", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: dataToSend.toString(),
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            reviewMessage.textContent = "리뷰 작성 성공!";
+                            reviewMessage.style.color = "green";
+                            reviewForm.reset();
+                            fetchReviews(showIdx);
+                        } else {
+                            reviewMessage.textContent = `리뷰 작성 실패: ${result.error || "알 수 없는 오류"}`;
+                            reviewMessage.style.color = "red";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("리뷰 작성 중 오류 발생:", error);
+                        reviewMessage.textContent = "리뷰 작성 중 오류가 발생했습니다. 다시 시도하세요.";
+                        reviewMessage.style.color = "red";
+                    });
+            });
+        }
+
+        function fetchReviews(showIdx) {
+            fetch(`http://localhost:8081/test1/ReviewListCon?showIdx=${showIdx}`)
+                .then(response => response.json())
+                .then(reviews => {
+                    const reviewContainer = document.getElementById("reviewSection");
+                    reviewContainer.innerHTML = "";
+
+                    if (reviews.length === 0) {
+                        reviewContainer.innerHTML = "<p>아직 작성된 리뷰가 없습니다.</p>";
+                        return;
+                    }
+
+                    reviews.forEach(review => {
+                        console.log("서버에서 받은 리뷰 데이터:", review); // 서버에서 받은 데이터 확인
+                        const reviewElement = document.createElement("div");
+                        reviewElement.classList.add("review");
+                        reviewElement.innerHTML = `
                         <p><strong>${review.userName || "익명"}</strong> (${review.reviewStar || 0}점)</p>
                         <p>${review.reviewContent || "내용 없음"}</p>
                         <button class="delete-review-button" data-review-id="${review.reviewIdx}">삭제</button>
                         <hr>
                     `;
-                    reviewContainer.appendChild(reviewElement);
-                });
-
-                // 삭제 버튼 이벤트 추가
-                const deleteButtons = document.querySelectorAll(".delete-review-button");
-                deleteButtons.forEach(button => {
-                    const reviewId = button.getAttribute("data-review-id");
-                    console.log("생성된 삭제 버튼 reviewId:", reviewId); // 삭제 버튼에 설정된 reviewId 확인
-                    button.addEventListener("click", () => {
-                        if (!reviewId || isNaN(reviewId)) {
-                            alert("삭제할 리뷰 ID가 올바르지 않습니다.");
-                            return;
-                        }
-                        deleteReview(reviewId, showIdx);
+                        reviewContainer.appendChild(reviewElement);
                     });
+
+                    // 삭제 버튼 이벤트 추가
+                    const deleteButtons = document.querySelectorAll(".delete-review-button");
+                    deleteButtons.forEach(button => {
+                        const reviewId = button.getAttribute("data-review-id");
+                        console.log("생성된 삭제 버튼 reviewId:", reviewId); // 삭제 버튼에 설정된 reviewId 확인
+                        button.addEventListener("click", () => {
+                            if (!reviewId || isNaN(reviewId)) {
+                                alert("삭제할 리뷰 ID가 올바르지 않습니다.");
+                                return;
+                            }
+                            deleteReview(reviewId, showIdx);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
+                    const reviewContainer = document.getElementById("reviewSection");
+                    reviewContainer.innerHTML = "<p>리뷰를 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.</p>";
                 });
-            })
-            .catch(error => {
-                console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
-                const reviewContainer = document.getElementById("reviewSection");
-                reviewContainer.innerHTML = "<p>리뷰를 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.</p>";
-            });
-    }
-
-
-    
-    function deleteReview(reviewId, showIdx) {
-        console.log("삭제 요청 reviewId:", reviewId); // 디버깅용 로그
-
-        if (!reviewId || isNaN(reviewId)) {
-            alert("삭제할 리뷰 ID가 올바르지 않습니다.");
-            return;
         }
 
-        if (!confirm("정말 이 리뷰를 삭제하시겠습니까?")) return;
 
-        fetch("http://localhost:8081/test1/DeleteReviewCon", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `reviewId=${reviewId}`,
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("리뷰 삭제 요청 실패");
-                }
-                return response.json();
+
+        function deleteReview(reviewId, showIdx) {
+            console.log("삭제 요청 reviewId:", reviewId); // 디버깅용 로그
+
+            if (!reviewId || isNaN(reviewId)) {
+                alert("삭제할 리뷰 ID가 올바르지 않습니다.");
+                return;
+            }
+
+            if (!confirm("정말 이 리뷰를 삭제하시겠습니까?")) return;
+
+            fetch("http://localhost:8081/test1/DeleteReviewCon", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `reviewId=${reviewId}`,
             })
-            .then(result => {
-                if (result.success) {
-                    alert("리뷰가 성공적으로 삭제되었습니다.");
-                    fetchReviews(showIdx); // 리뷰 목록 새로고침
-                } else {
-                    alert(`리뷰 삭제 실패: ${result.error || "알 수 없는 오류"}`);
-                }
-            })
-            .catch(error => {
-                console.error("리뷰 삭제 중 오류 발생:", error);
-                alert("리뷰 삭제 중 문제가 발생했습니다. 다시 시도해주세요.");
-            });
-    }
-
-
-    
-    
-    
-    
-    
-    
-    
-
-    function initializePopup() {
-        const popupOverlay = document.getElementById('popupOverlay');
-        const popupClose = document.getElementById('popupClose');
-
-        popupClose.addEventListener("click", closePopup);
-        popupOverlay.addEventListener("click", closePopup);
-
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            popupOverlay.style.display = 'none';
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("리뷰 삭제 요청 실패");
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        alert("리뷰가 성공적으로 삭제되었습니다.");
+                        fetchReviews(showIdx); // 리뷰 목록 새로고침
+                    } else {
+                        alert(`리뷰 삭제 실패: ${result.error || "알 수 없는 오류"}`);
+                    }
+                })
+                .catch(error => {
+                    console.error("리뷰 삭제 중 오류 발생:", error);
+                    alert("리뷰 삭제 중 문제가 발생했습니다. 다시 시도해주세요.");
+                });
         }
-    }
-</script>
+
+
+
+
+
+
+
+
+
+
+        function initializePopup() {
+            const popupOverlay = document.getElementById('popupOverlay');
+            const popupClose = document.getElementById('popupClose');
+
+            popupClose.addEventListener("click", closePopup);
+            popupOverlay.addEventListener("click", closePopup);
+
+            function closePopup() {
+                document.getElementById('popup').style.display = 'none';
+                popupOverlay.style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
+
 </html>
