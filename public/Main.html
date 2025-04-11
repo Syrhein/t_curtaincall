@@ -71,7 +71,7 @@
         let filteredData = []; // 검색 결과 데이터를 저장
 
         // 데이터 로드
-        fetch('http://localhost:8081/test1/MainCon') // 서버 URL
+        fetch('/api/musicals') // 서버 URL
             .then(response => response.json())
             .then(data => {
                 allData = data; // 전체 데이터를 저장
