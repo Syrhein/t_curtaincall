@@ -17,52 +17,83 @@
             <div class="SignUpTxt">
                 <div class="SignUp">SIGN UP</div>
             </div>
-            <form action="JoinCon" method="post">
+            
                 <div class="Frame3">
                     <!-- 아이디 입력 -->
                     <div class="InputId" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <img src="./img/icon_user.png" alt="User Icon" style="width: 20px; height: 20px;">
-                        <input type="text" name="userId" placeholder="아이디를 입력하세요." 
+                        <input type="text" id="userId" placeholder="아이디를 입력하세요." 
                         style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">                    
                     </div>
                     <!-- 비밀번호 입력 -->
                     <div class="InputPw" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <img src="./img/icon_lock.png" alt="Lock Icon" style="width: 15px; height: 20px; margin-left: 3px; margin-right: 3px;">
-                        <input type="password" name="userPw" placeholder="비밀번호를 입력하세요."                         
+                        <input type="password" id="userPw" placeholder="비밀번호를 입력하세요."                         
                         style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
                     </div>
                     <!-- 이름 입력 -->
                     <div class="InputName" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <img src="./img/icon_user.png" alt="User Icon" style="width: 20px; height: 20px;">
-                        <input type="text" name="userName" placeholder="이름을 입력하세요." 
+                        <input type="text" id="userName" placeholder="이름을 입력하세요." 
                         style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
                     </div>
                     <!-- 이메일 입력 -->
                     <div class="InputEmail" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <img src="./img/icon_mail.png" alt="Mail Icon" style="width: 17px; height: 15px; margin-left: 3px;">
-                        <input type="email" name="userEmail" placeholder="이메일을 입력하세요." 
+                        <input type="email" id="userEmail" placeholder="이메일을 입력하세요." 
                         style="flex: 1; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
                     </div>
                     <!-- 전화번호 입력 -->
                     <div class="InputPhone" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <img src="./img/icon_phone.png" alt="Phone Icon" style="width: 15px; height: 15px; margin-left: 3px;">
-                        <input type="tel" name="userTel" placeholder="전화번호를 입력하세요." 
+                        <input type="tel" id="userTel" placeholder="전화번호를 입력하세요." 
                         style="width: 120%; height: 20px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; background-color: #8f8d8d42;">
                     </div>
                     <!-- 회원가입 버튼 -->
                     <div class="BtnSignup" style="position: relative; z-index: 10;">
-                        <button style="flex: 1; width: 110px; height: 35px; background: #6d211f; color: white; font-weight: bold; border: none; border-radius: 5px;">
+                        <button id='signUpBtn' style="flex: 1; width: 110px; height: 35px; background: #6d211f; color: white; font-weight: bold; border: none; border-radius: 5px;">
                             SIGN UP
                         </button>
                     </div>
-                </div>
-            </form>    
+                </div>    
         </div>
     </div>
-  <script>
- // 로고 메인화면 가기
-    document.querySelector('.CurtainCallGuide').addEventListener('click', () => {
-        window.location.href = 'Main.html' }); 
-        </script>
+
+    <script>
+        document.querySelector('#signUpBtn').addEventListener('click', async (e) => {
+          e.preventDefault(); // 폼 전송 방지
+      
+          const userId = document.querySelector('#userId').value;
+          const userPw = document.querySelector('#userPw').value;
+          const userName = document.querySelector('#userName').value;
+          const userEmail = document.querySelector('#userEmail').value;
+          const userTel = document.querySelector('#userTel').value;
+      
+          try {
+            const res = await fetch('/api/signup', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId, userPw, userName, userEmail, userTel })
+            });
+      
+            const data = await res.json();
+            if (data.success) {
+              alert('🎉 회원가입이 완료되었습니다!');
+              location.href = '/login.html';
+            } else {
+              alert('⚠️ ' + data.message);
+            }
+          } catch (err) {
+            alert('❌ 서버 오류: ' + err.message);
+          }
+        });
+      
+        // 메인화면 이동
+        document.querySelector('.CurtainCallGuide').addEventListener('click', () => {
+          window.location.href = 'Main.html';
+        });
+      </script>
+      
+
 </body>
 </html>

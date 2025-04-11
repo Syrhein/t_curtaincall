@@ -1,4 +1,5 @@
 const express = require('express'); // 서버 만드는 라이브러리
+const session = require('express-session');
 const path = require('path');
 const app = express(); // 서버 인스턴스를 app에 담기
 const PORT = 3000; // 포트 설정 http://localhost:3000
@@ -11,7 +12,11 @@ app.use(express.json());
 
 // API 라우터 연결
 const slideRoutes = require('./routes/slides');
+const signupRoutes = require('./routes/signup');
+const loginRoutes = require('./routes/login');
 app.use('/api/slides', slideRoutes);
+app.use('/api/login', loginRoutes);
+app.use('/api/signup', signupRoutes);
 
 
 // 기본 경로
