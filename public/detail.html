@@ -82,23 +82,30 @@
             <h3>관심</h3>
         </div>
     </div>
-    <!-- 리뷰 시도라도 해봄 -->
+
+    <!-- 평균 별점 표시 -->
+    <div id="averageRating">
+        평균 평점: <span id="averageStarValue">0.0</span> / 5.0
+    </div>
+
     <!-- 리뷰 작성 폼 -->
     <form id="reviewForm">
-        <!-- showIdx를 hidden input으로 추가 -->
         <input type="hidden" id="showIdx" name="showIdx" value="">
         <textarea name="reviewContent" placeholder="리뷰를 입력하세요" required></textarea>
-        <label for="reviewStar">평점 (1-5):</label> <input type="number" name="reviewStar" min="1" max="5" required>
+        <label for="reviewStar">평점 (1-5):</label>
+        <input type="number" name="reviewStar" min="1" max="5" required>
         <button id="submitReviewButton" type="button">리뷰 작성</button>
     </form>
     <div id="reviewMessage"></div>
 
-
-    <!-- 리뷰 조회 테이블  -->
+    <!-- 리뷰 카드 리스트 -->
     <div id="reviewSection" class="review-section">
-        <!-- JavaScript로 리뷰 데이터가 추가될 예정 -->
         <h3>리뷰 조회</h3>
+        <div id="reviewCards" class="container_card">
+            <!-- JS에서 카드 개별 추가 -->
+        </div>
     </div>
+
 
 
 
@@ -144,6 +151,7 @@
             initializeFavoriteFeature(showIdx, userId);
             initializeReviewFeature(showIdx, userId);
             fetchReviews(showIdx, userId);
+            fetchAverageRating(showIdx);
             initializePopup();
         }
 
@@ -234,89 +242,118 @@
 
             reviewButton.addEventListener("click", () => {
                 const formData = new FormData(reviewForm);
-                const reviewStar = parseInt(formData.get("reviewStar"), 10);
+                formData.append("userId", userId);
+
+                // ⭐ 숫자 형 변환 추가
+                formData.set("reviewStar", Number(formData.get("reviewStar")));
 
                 const dataToSend = new URLSearchParams();
-                dataToSend.append("showIdx", showIdx);
-                dataToSend.append("userId", userId);
-                dataToSend.append("reviewContent", formData.get("reviewContent"));
-                dataToSend.append("reviewStar", reviewStar);
+                for (const [key, value] of formData) {
+                    dataToSend.append(key, value);
+                }
 
-                fetch("/api/reviews", {
-                    method: "POST",
+                let url = "/api/reviews";
+                let method = "POST";
+                if (myReview && myReview.reviewIdx !== undefined) {
+                    url = `/api/reviews/${myReview.reviewIdx}`;
+                    method = "PUT";
+                }
+
+                fetch(url, {
+                    method,
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: dataToSend.toString(),
                 })
                     .then(response => response.json())
                     .then(result => {
                         if (result.success) {
-                            reviewMessage.textContent = "리뷰 작성 성공!";
+                            reviewMessage.textContent = method === "POST" ? "리뷰 작성 성공!" : "리뷰 수정 성공!";
                             reviewMessage.style.color = "green";
                             reviewForm.reset();
+                            document.getElementById("submitReviewButton").textContent = "리뷰 작성";
                             fetchReviews(showIdx, userId);
+                            fetchAverageRating(showIdx);
                         } else {
-                            reviewMessage.textContent = `리뷰 작성 실패: ${result.error || "알 수 없는 오류"}`;
+                            reviewMessage.textContent = `작업 실패: ${result.error || "알 수 없는 오류"}`;
                             reviewMessage.style.color = "red";
                         }
                     })
                     .catch(error => {
-                        console.error("리뷰 작성 중 오류 발생:", error);
-                        reviewMessage.textContent = "리뷰 작성 중 오류가 발생했습니다. 다시 시도하세요.";
+                        console.error("리뷰 처리 중 오류:", error);
+                        reviewMessage.textContent = "서버 오류. 다시 시도하세요.";
                         reviewMessage.style.color = "red";
                     });
             });
 
         }
 
+
+        let myReview = null; // 전역 변수로 본인 리뷰를 저장
+
         function fetchReviews(showIdx, userId) {
             fetch(`/api/reviews?showIdx=${showIdx}`)
                 .then(response => response.json())
                 .then(reviews => {
-                    const reviewContainer = document.getElementById("reviewSection");
-                    reviewContainer.innerHTML = "";
+                    const reviewSection = document.getElementById("reviewSection");
+                    reviewSection.innerHTML = "<h3>리뷰 조회</h3>";
 
-                    if (reviews.length === 0) {
-                        reviewContainer.innerHTML = "<p>아직 작성된 리뷰가 없습니다.</p>";
-                        return;
-                    }
+                    const cardContainer = document.createElement("div");
+                    cardContainer.className = "container_card";
+                    reviewSection.appendChild(cardContainer);
+
+                    myReview = reviews.find(r => r.userId === userId); // 본인 리뷰 탐색
 
                     reviews.forEach(review => {
-                        const reviewElement = document.createElement("div");
-                        reviewElement.classList.add("review");
-
-                        // 날짜 포맷
                         const createdDate = new Date(review.createdAt).toLocaleDateString();
 
-                        reviewElement.innerHTML = `
-          <p><strong>${review.userName || "익명"}</strong> (${review.reviewStar || 0}점)</p>
-          <p>${review.reviewContent || "내용 없음"}</p>
-          <p class="review-date">${createdDate}</p>
-          ${review.userId === userId ? `<button class="delete-review-button" data-review-id="${review.reviewIdx}">삭제</button>` : ''}
-          <hr>
-        `;
+                        const reviewElement = document.createElement("div");
+                        reviewElement.className = "card";
 
-                        reviewContainer.appendChild(reviewElement);
+                        reviewElement.innerHTML = `
+        <div class="card-header">
+            <img class="profile-img" src="/img/icon_my.png" alt="프로필 이미지">
+            <h2>${review.userName}</h2>
+            <div class="rating">${review.reviewStar}점</div>
+        </div>
+        <div class="space"></div>
+        <div class="card-content">
+            <a>${review.reviewContent}</a>
+        </div>
+        <div class="card-footer">
+            <div class="likes-comments">
+                <span class="review-date">${createdDate}</span>
+            </div>
+            ${review.userId === userId
+                                ? `<button class="delete-review-button" data-review-id="${review.reviewIdx}">삭제</button>`
+                                : ""}
+        </div>
+    `;
+
+                        cardContainer.appendChild(reviewElement);
                     });
 
-                    // 삭제 버튼 이벤트 바인딩
-                    const deleteButtons = document.querySelectorAll(".delete-review-button");
-                    deleteButtons.forEach(button => {
-                        const reviewId = button.getAttribute("data-review-id");
+
+                    // 🔁 본인 리뷰가 있으면 폼에 미리 채워줌
+                    if (myReview) {
+                        document.querySelector("textarea[name='reviewContent']").value = myReview.reviewContent;
+                        document.querySelector("input[name='reviewStar']").value = myReview.reviewStar;
+                        document.getElementById("submitReviewButton").textContent = "리뷰 수정";
+                    } else {
+                        document.getElementById("reviewForm").reset();
+                        document.getElementById("submitReviewButton").textContent = "리뷰 작성";
+                    }
+
+                    // ✅ 여기서 버튼 이벤트 바인딩!
+                    document.querySelectorAll(".delete-review-button").forEach(button => {
                         button.addEventListener("click", () => {
-                            if (!reviewId || isNaN(reviewId)) {
-                                alert("삭제할 리뷰 ID가 올바르지 않습니다.");
-                                return;
-                            }
+                            const reviewId = button.getAttribute("data-review-id");
                             deleteReview(reviewId, showIdx, userId);
                         });
                     });
-                })
-                .catch(error => {
-                    console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
-                    const reviewContainer = document.getElementById("reviewSection");
-                    reviewContainer.innerHTML = "<p>리뷰를 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.</p>";
+
                 });
         }
+
 
 
 
@@ -336,7 +373,11 @@
                 .then(result => {
                     if (result.success) {
                         alert("리뷰가 성공적으로 삭제되었습니다.");
-                        fetchReviews(showIdx, userId); // 새로 고침 시 userId 유지
+                        myReview = null; // ✅ 리뷰 초기화
+                        document.getElementById("reviewForm").reset(); // 폼 리셋
+                        document.getElementById("submitReviewButton").textContent = "리뷰 작성"; // 버튼 초기화
+                        fetchReviews(showIdx, userId); // 리뷰 새로고침
+                        fetchAverageRating(showIdx); // 별점도 갱신
                     } else {
                         alert(`리뷰 삭제 실패: ${result.error || "알 수 없는 오류"}`);
                     }
@@ -344,6 +385,21 @@
                 .catch(error => {
                     console.error("리뷰 삭제 중 오류:", error);
                     alert("리뷰 삭제 중 문제가 발생했습니다. 다시 시도해주세요.");
+                });
+        }
+
+
+        // 리뷰 평점 조회 함수
+        function fetchAverageRating(showIdx) {
+            fetch(`/api/reviews/average?showIdx=${showIdx}`)
+                .then(response => response.json())
+                .then(data => {
+                    const average = parseFloat(data.averageStar);
+                    document.getElementById("averageStarValue").innerText = isNaN(average) ? "-" : average.toFixed(1);
+                })
+                .catch(error => {
+                    console.error("평균 평점 불러오기 실패:", error);
+                    document.getElementById("averageStarValue").innerText = "-";
                 });
         }
 
