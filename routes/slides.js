@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
         M.MUSICAL_POSTER AS musicalPoster
       FROM TB_MUSICAL M
       JOIN TB_SHOW S ON M.MUSICAL_ID = S.MUSICAL_ID
-      ORDER BY S.SHOW_IDX DESC
+      ORDER BY S.SHOW_VIEWS DESC
       LIMIT 5
     `);
 
@@ -23,5 +23,6 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: '서버 오류' });
   }
 });
+
 
 module.exports = router;

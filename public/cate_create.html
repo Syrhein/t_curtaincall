@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let debounceTimeout; // 디바운싱 타이머
 
     // 데이터 로드
-    fetch('http://localhost:8081/test1/MainCon') // 서버 URL
+    fetch('/api/musicals') // 서버 URL
         .then(response => response.json())
         .then(data => {
         	 console.log(data); 

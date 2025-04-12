@@ -10,7 +10,9 @@ router.get('/', async (req, res) => {
         S.SHOW_IDX AS showIdx,
         M.MUSICAL_ID AS musicalId,
         M.MUSICAL_TITLE AS musicalTitle,
-        M.MUSICAL_POSTER AS musicalPoster
+        M.MUSICAL_POSTER AS musicalPoster,
+        M.MUSICAL_CREATE AS musicalCreate,
+        M.MUSICAL_LICENSE AS musicalLicense
       FROM TB_MUSICAL M
       JOIN TB_SHOW S ON M.MUSICAL_ID = S.MUSICAL_ID
       ORDER BY S.SHOW_IDX DESC
