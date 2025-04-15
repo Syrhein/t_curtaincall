@@ -153,43 +153,55 @@ function deletePost() {
 }
 
 // 댓글 불러오기
-async function loadComments() {
+async function loadComments(page = 1) {
   const postIdx = new URLSearchParams(location.search).get("postIdx");
   try {
-    const res = await fetch(`/api/comments/${postIdx}`);
-    const comments = await res.json();
+    const res = await fetch(`/api/comments/${postIdx}?page=${page}&limit=5`);
+    const data = await res.json();
 
     const list = document.getElementById("comment-list");
-    list.innerHTML = ""; // 초기화
+    list.innerHTML = "";
 
-    if (comments.length === 0) {
+    if (!data.comments || data.comments.length === 0) {
       list.innerHTML = "<p>댓글이 없습니다.</p>";
       return;
     }
 
-	comments.forEach(comment => {
-		const commentEl = document.createElement("div");
-		commentEl.classList.add("comment-item");
+    data.comments.forEach(comment => {
+      const commentEl = document.createElement("div");
+      commentEl.classList.add("comment-item");
 
-		const dateStr = new Date(comment.createdAt).toLocaleString();
+      const dateStr = new Date(comment.createdAt).toLocaleString();
+      let buttons = "";
 
-		commentEl.innerHTML = `
-			<div>
-			<span class="comment-author">${comment.userName || comment.userId}</span>
-			<span class="comment-date">${dateStr}</span>
-			</div>
-			<div class="comment-content">${comment.content}</div>
-		`;
+      if (loginUserId && loginUserId === comment.userId) {
+        buttons = `
+          <button class="comment-delete" data-id="${comment.commentId}">삭제</button>
+          <button class="comment-edit" data-id="${comment.commentId}">수정</button>
+        `;
+      }
 
-  list.appendChild(commentEl);
-});
+      commentEl.innerHTML = `
+        <div>
+          <span class="comment-author">${comment.userName || comment.userId}</span>
+          <span class="comment-date">${dateStr}</span>
+        </div>
+        <div class="comment-content" data-id="${comment.commentId}">${comment.content}</div>
+        <div class="comment-buttons">${buttons}</div>
+      `;
 
+      list.appendChild(commentEl);
+    });
+
+    // ✅ 페이지네이션 버튼 생성
+    renderPagination(data.totalCount, page, data.limit);
 
   } catch (err) {
     console.error("댓글 불러오기 오류:", err);
     document.getElementById("comment-list").innerHTML = "<p>댓글을 불러오지 못했습니다.</p>";
   }
 }
+
 
 // 댓글 작성
 document.getElementById("comment-submit").addEventListener("click", async () => {
@@ -226,6 +238,112 @@ document.getElementById("comment-submit").addEventListener("click", async () => 
     alert("댓글 작성 중 오류가 발생했습니다.");
   }
 });
+
+// 댓글 삭제
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("comment-delete")) {
+    const commentId = e.target.dataset.id;
+    if (!confirm("댓글을 삭제하시겠습니까?")) return;
+
+    try {
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: 'DELETE'
+      });
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        alert("댓글이 삭제되었습니다.");
+        loadComments();
+      } else {
+        alert("삭제 실패: " + (result.error || "서버 오류"));
+      }
+    } catch (err) {
+      console.error("댓글 삭제 오류:", err);
+      alert("댓글 삭제 중 오류가 발생했습니다.");
+    }
+  }
+});
+
+// 댓글 수정
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("comment-edit")) {
+    const commentId = e.target.dataset.id;
+    const contentEl = document.querySelector(`.comment-content[data-id="${commentId}"]`);
+    const originalText = contentEl.textContent;
+
+    // 이미 수정 중이면 return
+    if (contentEl.querySelector("textarea")) return;
+
+    contentEl.innerHTML = `
+      <textarea class="edit-textarea">${originalText}</textarea>
+      <div style="margin-top: 5px;">
+        <button class="edit-save-btn" data-id="${commentId}">저장</button>
+        <button class="edit-cancel-btn" data-id="${commentId}">취소</button>
+      </div>
+    `;
+  }
+});
+
+// 댓글 수정시 버튼 이벤트
+document.addEventListener("click", async (e) => {
+  const commentId = e.target.dataset.id;
+
+  // 저장
+  if (e.target.classList.contains("edit-save-btn")) {
+    const textarea = document.querySelector(`.comment-content[data-id="${commentId}"] textarea`);
+    const newContent = textarea.value.trim();
+
+    if (!newContent) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: newContent })
+      });
+
+      const result = await res.json();
+      if (res.ok && result.success) {
+        loadComments();
+      } else {
+        alert("수정 실패: " + (result.error || "서버 오류"));
+      }
+    } catch (err) {
+      console.error("댓글 수정 오류:", err);
+      alert("댓글 수정 중 오류 발생");
+    }
+  }
+
+  // 취소
+  if (e.target.classList.contains("edit-cancel-btn")) {
+    loadComments(); // 다시 로딩해서 원상복구
+  }
+});
+
+// 댓글 페이지네이션
+function renderPagination(total, currentPage, limit) {
+  const pageCount = Math.ceil(total / limit);
+  const container = document.getElementById("comment-list");
+
+  if (pageCount <= 1) return;
+
+  const nav = document.createElement("div");
+  nav.classList.add("pagination");
+
+  for (let i = 1; i <= pageCount; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    btn.disabled = i === currentPage;
+    btn.addEventListener("click", () => loadComments(i));
+    nav.appendChild(btn);
+  }
+
+  container.appendChild(nav);
+}
+
 
 
 </script>
