@@ -27,6 +27,7 @@ const musicalRoutes = require('./routes/musicals');
 const favoriteRoutes = require('./routes/favorite');
 const reviewRoutes = require('./routes/reviews');
 const postRoutes = require('./routes/posts');
+const commentRoutes = require('./routes/comments');
 app.use('/api/slides', slideRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/signup', signupRoutes);
@@ -34,6 +35,7 @@ app.use('/api/musicals', musicalRoutes);
 app.use('/api/favorite', favoriteRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes);
 
 
 // 기본 경로

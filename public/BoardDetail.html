@@ -62,8 +62,18 @@
       <a href="board.html">목록</a>
     </div>
 
+	 <!-- ✅ 댓글 영역: container 안쪽으로 이동 -->
+	 <div class="comment-wrapper">
+		<h3 class="comment-title">댓글</h3>
+		<div id="comment-list" class="comment-list"></div>
+		<div class="comment-form">
+		  <textarea id="comment-content" class="comment-input" placeholder="댓글을 입력하세요."></textarea>
+		  <button id="comment-submit" class="comment-submit-btn">작성</button>
+	</div>
+
   </div>
 </div>
+
 
 <script>
 let postData = null;
@@ -72,7 +82,7 @@ let loginUserId = null;
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(location.search);
   const postIdx = urlParams.get("postIdx");
-
+  loadComments(); // 댓글 불러오기 추가
   if (!postIdx) {
     alert("게시글 정보를 확인할 수 없습니다.");
     location.href = "board.html";
@@ -141,6 +151,83 @@ function deletePost() {
     console.error(error);
   });
 }
+
+// 댓글 불러오기
+async function loadComments() {
+  const postIdx = new URLSearchParams(location.search).get("postIdx");
+  try {
+    const res = await fetch(`/api/comments/${postIdx}`);
+    const comments = await res.json();
+
+    const list = document.getElementById("comment-list");
+    list.innerHTML = ""; // 초기화
+
+    if (comments.length === 0) {
+      list.innerHTML = "<p>댓글이 없습니다.</p>";
+      return;
+    }
+
+	comments.forEach(comment => {
+		const commentEl = document.createElement("div");
+		commentEl.classList.add("comment-item");
+
+		const dateStr = new Date(comment.createdAt).toLocaleString();
+
+		commentEl.innerHTML = `
+			<div>
+			<span class="comment-author">${comment.userName || comment.userId}</span>
+			<span class="comment-date">${dateStr}</span>
+			</div>
+			<div class="comment-content">${comment.content}</div>
+		`;
+
+  list.appendChild(commentEl);
+});
+
+
+  } catch (err) {
+    console.error("댓글 불러오기 오류:", err);
+    document.getElementById("comment-list").innerHTML = "<p>댓글을 불러오지 못했습니다.</p>";
+  }
+}
+
+// 댓글 작성
+document.getElementById("comment-submit").addEventListener("click", async () => {
+  const content = document.getElementById("comment-content").value.trim();
+  const postIdx = new URLSearchParams(location.search).get("postIdx");
+
+  if (!content) {
+    alert("댓글 내용을 입력해주세요.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        postId: postIdx,
+        userId: loginUserId,
+        content
+      })
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      document.getElementById("comment-content").value = "";
+      loadComments();
+    } else {
+      alert("댓글 작성 실패: " + (result.error || "서버 오류"));
+    }
+
+  } catch (err) {
+    console.error("댓글 작성 오류:", err);
+    alert("댓글 작성 중 오류가 발생했습니다.");
+  }
+});
+
+
 </script>
 
 <script src="./js/common.js"></script>
