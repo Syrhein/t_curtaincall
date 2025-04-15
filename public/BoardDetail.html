@@ -33,6 +33,11 @@
     <!-- 제목 -->
     <h2 class="title" id="postTitle">제목 불러오는 중...</h2>
 
+	<!-- 게시글 좋아요 버튼 (postTitle 아래나 myinfo 옆이 자연스러움) -->
+	<div class="post-like-box">
+		<button id="post-like-btn">❤️ <span id="post-like-count">0</span></button>
+  	</div>
+
     <!-- 작성자, 날짜, 조회수 -->
     <div class="myinfo">
       <dl>
@@ -83,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(location.search);
   const postIdx = urlParams.get("postIdx");
   loadComments(); // 댓글 불러오기 추가
+
   if (!postIdx) {
     alert("게시글 정보를 확인할 수 없습니다.");
     location.href = "board.html";
@@ -106,6 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("postDate").innerText = new Date(postData.createdAt).toLocaleDateString();
     document.getElementById("postViews").innerText = postData.postViews;
     document.getElementById("postContent").innerHTML = postData.postContent.replace(/\n/g, "<br>");
+	document.getElementById("post-like-count").innerText = postData.postLikes || 0;
 
     if (postData.postFileName && postData.postFilePath) {
       const filePath = postData.postFilePath.startsWith('/uploads') ? postData.postFilePath : `/uploads/${postData.postFilePath}`;
@@ -375,6 +382,33 @@ document.addEventListener("click", async (e) => {
     } catch (err) {
       console.error("좋아요 토글 오류:", err);
     }
+  }
+});
+
+// ✅ 게시글 좋아요 기능
+document.getElementById("post-like-btn").addEventListener("click", async () => {
+  const postIdx = new URLSearchParams(location.search).get("postIdx");
+  if (!loginUserId) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/posts/${postIdx}/like`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: loginUserId })
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      // 카운트 반영
+      const countEl = document.getElementById("post-like-count");
+      const current = parseInt(countEl.innerText);
+      countEl.innerText = result.liked ? current + 1 : current - 1;
+    }
+  } catch (err) {
+    console.error("게시글 좋아요 오류:", err);
   }
 });
 

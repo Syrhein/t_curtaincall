@@ -21,8 +21,13 @@ const upload = multer({ storage });
 router.get('/', async (req, res) => {
   try {
     const [posts] = await db.query(`
-      SELECT POST_IDX AS postIdx, POST_TITLE AS postTitle, USER_NAME AS userName,
-             CREATED_AT AS createdAt, POST_VIEWS AS postViews
+      SELECT 
+        POST_IDX AS postIdx, 
+        POST_TITLE AS postTitle, 
+        USER_NAME AS userName,
+        CREATED_AT AS createdAt, 
+        POST_VIEWS AS postViews,
+        POST_LIKES AS postLikes   -- ✅ 이 줄 추가!
       FROM TB_POST
       ORDER BY CREATED_AT DESC
     `);
@@ -146,5 +151,35 @@ router.delete('/:postIdx', async (req, res) => {
     res.status(500).json({ error: '서버 오류' });
   }
 });
+
+// ✅ 게시글 좋아요
+router.post('/:postId/like', async (req, res) => {
+  const { postId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    // 이미 좋아요를 눌렀는지 확인
+    const [existing] = await db.query(
+      `SELECT * FROM TB_POST_LIKES WHERE POST_IDX = ? AND USER_ID = ?`,
+      [postId, userId]
+    );
+
+    if (existing.length > 0) {
+      // 좋아요 취소
+      await db.query(`DELETE FROM TB_POST_LIKES WHERE POST_IDX = ? AND USER_ID = ?`, [postId, userId]);
+      await db.query(`UPDATE TB_POST SET POST_LIKES = POST_LIKES - 1 WHERE POST_IDX = ?`, [postId]);
+      return res.json({ liked: false });
+    } else {
+      // 좋아요 추가
+      await db.query(`INSERT INTO TB_POST_LIKES (POST_IDX, USER_ID) VALUES (?, ?)`, [postId, userId]);
+      await db.query(`UPDATE TB_POST SET POST_LIKES = POST_LIKES + 1 WHERE POST_IDX = ?`, [postId]);
+      return res.json({ liked: true });
+    }
+  } catch (err) {
+    console.error("게시글 좋아요 토글 오류:", err);
+    res.status(500).json({ error: "서버 오류" });
+  }
+});
+
 
 module.exports = router;

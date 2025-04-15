@@ -9,12 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
           const row = document.createElement("tr");
   
           row.innerHTML = `
-            <td>${posts.length - index}</td>
-            <td><a href="BoardDetail.html?postIdx=${post.postIdx}" class="board-title">${post.postTitle}</a></td>
-            <td>${post.userName || post.userId}</td>
-            <td>${new Date(post.createdAt).toLocaleDateString()}</td>
-            <td style="text-align:center">${post.postViews}</td>
-          `;
+          <td>${posts.length - index}</td>
+          <td><a href="BoardDetail.html?postIdx=${post.postIdx}" class="board-title">${post.postTitle}</a></td>
+          <td>${post.userName || post.userId}</td>
+          <td>${new Date(post.createdAt).toLocaleDateString()}</td>
+          <td style="text-align:center">${post.postViews}</td>
+          <td style="text-align:center">${post.postLikes || 0}</td>
+        `;
+        
   
           tbody.appendChild(row);
         });
