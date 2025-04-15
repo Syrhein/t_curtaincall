@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { selector: '.BtnSignUp', url: 'signUp.html' },
             { selector: '.categories .category:nth-child(1)', url: 'cate_create.html' },
             { selector: '.categories .category:nth-child(2)', url: 'cate_license.html' },
-            { selector: '.categories .category:nth-child(3)', url: 'Board.jsp' },
+            { selector: '.categories .category:nth-child(3)', url: 'Board.html' },
             { selector: '.logo', url: 'Main.html' },
         ];
 

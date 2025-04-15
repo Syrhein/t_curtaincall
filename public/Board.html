@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시판</title>
+  <link rel="stylesheet" href="./css/Board.css">
+  <script src="./js/navigation.js"></script>
+</head>
+<body>
+
+<!-- ✅ 헤더 영역 -->
+<div class="header">
+  <div class="Frame1">
+    <div class="categories">
+      <div class="category">국내창작</div>
+      <div class="category">라이센스</div>
+      <div class="category">게시판</div>
+    </div>
+    <div class="logo">CURTAIN CALL GUIDE</div>
+    <div class="Buttons">
+      <div class="BtnSignUp"><div class="SignUp">회원가입</div></div>
+      <div class="BtnLogin"><div class="Login">로그인</div></div>
+      <div class="BtnLogout" style="display: none;"><div class="Logout">로그아웃</div></div>
+      <img src="./img/icon_my.png" class="icon_my" alt="My Icon">
+    </div>
+  </div>
+</div>
+
+<!-- ✅ 게시판 영역 -->
+<div class="container">
+  <h1>게시판</h1>
+
+  <!-- 글쓰기 버튼 -->
+  <div class="btn_posting">
+    <input type="button" onclick="location.href='board_write.html'" value="글쓰기 ✏️" class="btn_list">
+  </div>
+
+  <!-- 게시글 목록 테이블 -->
+  <table class="board_list">
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>조회수</th>
+        <th>좋아요</th>
+      </tr>
+    </thead>
+    <tbody id="postTableBody">
+      <!-- JavaScript에서 렌더링됨 -->
+    </tbody>
+  </table>
+
+  <!-- 페이지네이션 -->
+  <div class="paginate_area">
+    <div class="ArticlePaginate" id="pagination">
+      <!-- JavaScript로 버튼 삽입 -->
+    </div>
+  </div>
+</div>
+
+<script src="./js/board.js"></script>
+<script src="./js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 상세보기</title>
+  <link rel="stylesheet" href="./css/BoardDetail.css">
+  <script src="./js/navigation.js"></script>
+</head>
+<body>
+
+<!-- ✅ 헤더 -->
+<div class="header">
+  <div class="Frame1">
+    <div class="categories">
+      <div class="category">국내창작</div>
+      <div class="category">라이센스</div>
+      <div class="category">게시판</div>
+    </div>
+    <div class="logo">CURTAIN CALL GUIDE</div>
+    <div class="Buttons">
+      <div class="BtnSignUp"><div class="SignUp">회원가입</div></div>
+      <div class="BtnLogin"><div class="Login">로그인</div></div>
+      <div class="BtnLogout" style="display: none;"><div class="Logout">로그아웃</div></div>
+      <img src="./img/icon_my.png" class="icon_my" alt="My Icon">
+    </div>
+  </div>
+</div>
+
+<!-- ✅ 게시글 상세 영역 -->
+<div class="container">
+  <h1 id="postTitle">제목 불러오는 중...</h1>
+  <p>작성자: <span id="postAuthor">-</span></p>
+  <p>작성일: <span id="postDate">-</span></p>
+  <p>조회수: <span id="postViews">0</span></p>
+  <div id="postContent">내용 불러오는 중...</div>
+
+  <!-- 파일 다운로드 영역 -->
+  <div id="fileDownloadSection" style="margin-top: 20px;"></div>
+
+  <!-- 버튼 -->
+  <div id="postButtons" class="btn_posting" style="margin-top: 30px; display: flex; justify-content: flex-end;">
+    <button onclick="goToEdit()" class="btn_list">수정</button>
+    <button onclick="deletePost()" class="btn_list">삭제</button>
+    <button onclick="location.href='board.html'" class="btn_list">목록</button>
+  </div>
+</div>
+
+<script>
+let postData = null;
+let loginUserId = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(location.search);
+  const postIdx = urlParams.get("postIdx");
+
+  if (!postIdx) {
+    alert("게시글 정보를 확인할 수 없습니다.");
+    location.href = "board.html";
+    return;
+  }
+
+  try {
+    // 로그인 사용자 확인
+    const loginRes = await fetch('/api/login/status', { credentials: 'include' });
+    const loginData = await loginRes.json();
+    if (loginData.loggedIn) {
+      loginUserId = loginData.user.id;
+    }
+
+    // 게시글 데이터 불러오기
+    const postRes = await fetch(`/api/posts/${postIdx}`);
+    postData = await postRes.json();
+
+    document.getElementById("postTitle").innerText = postData.postTitle;
+    document.getElementById("postAuthor").innerText = postData.userName || postData.userId;
+    document.getElementById("postDate").innerText = new Date(postData.createdAt).toLocaleDateString();
+    document.getElementById("postViews").innerText = postData.postViews;
+    document.getElementById("postContent").innerHTML = postData.postContent.replace(/\n/g, "<br>");
+
+    // 첨부파일 있을 경우 다운로드 링크 표시
+    if (postData.postFileName && postData.postFilePath) {
+      const fileArea = document.getElementById("fileDownloadSection");
+      const filePath = postData.postFilePath.startsWith('/uploads') ? postData.postFilePath : `/uploads/${postData.postFilePath}`;
+      fileArea.innerHTML = `
+        <p>첨부파일: <a href="${filePath}" download="${postData.postFileName}">${postData.postFileName}</a></p>
+      `;
+    }
+
+    // 본인 글이 아닐 경우 수정/삭제 버튼 숨기기
+    if (!loginUserId || loginUserId !== postData.userId) {
+      document.getElementById("postButtons").style.display = "none";
+    }
+  } catch (err) {
+    alert("게시글을 불러오는 중 오류가 발생했습니다.");
+    console.error(err);
+  }
+});
+
+function goToEdit() {
+  const postIdx = new URLSearchParams(location.search).get("postIdx");
+  location.href = `board_write.html?mode=edit&postIdx=${postIdx}`;
+}
+
+function deletePost() {
+  const postIdx = new URLSearchParams(location.search).get("postIdx");
+  if (!confirm("정말로 이 글을 삭제하시겠습니까?")) return;
+
+  fetch(`/api/posts/${postIdx}`, {
+    method: "DELETE"
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      alert("삭제되었습니다.");
+      location.href = "board.html";
+    } else {
+      alert("삭제 실패: " + result.error);
+    }
+  })
+  .catch(error => {
+    alert("삭제 중 오류 발생");
+    console.error(error);
+  });
+}
+</script>
+
+<script src="./js/common.js"></script>
+</body>
+</html>
