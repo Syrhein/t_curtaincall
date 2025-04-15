@@ -33,12 +33,24 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ 게시글 상세 조회
+// ✅ 게시글 상세 조회 (camelCase alias 적용됨!)
 router.get('/:postIdx', async (req, res) => {
   const { postIdx } = req.params;
   try {
     const [[post]] = await db.query(`
-      SELECT * FROM TB_POST WHERE POST_IDX = ?
+      SELECT 
+        POST_IDX AS postIdx,
+        POST_TITLE AS postTitle,
+        POST_CONTENT AS postContent,
+        POST_FILE_NAME AS postFileName,
+        POST_FILE_PATH AS postFilePath,
+        CREATED_AT AS createdAt,
+        POST_VIEWS AS postViews,
+        POST_LIKES AS postLikes,
+        USER_ID AS userId,
+        USER_NAME AS userName
+      FROM TB_POST 
+      WHERE POST_IDX = ?
     `, [postIdx]);
 
     if (!post) return res.status(404).json({ error: '게시글이 존재하지 않습니다.' });
@@ -90,13 +102,11 @@ router.put('/:postIdx', upload.single('postFile'), async (req, res) => {
   const file = req.file;
 
   try {
-    // 권한 확인
     const [[post]] = await db.query(`SELECT * FROM TB_POST WHERE POST_IDX = ?`, [postIdx]);
     if (!post || post.USER_ID !== user.id) {
       return res.status(403).json({ error: '수정 권한이 없습니다.' });
     }
 
-    // 파일이 있으면 경로 포함 업데이트
     await db.query(`
       UPDATE TB_POST 
       SET POST_TITLE = ?, POST_CONTENT = ?, 

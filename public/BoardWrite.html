@@ -26,30 +26,50 @@
   </div>
 </div>
 
-<!-- ✅ 게시글 작성 폼 -->
+<!-- ✅ 게시글 작성 영역 -->
 <div class="container">
-  <h1 id="pageTitle">게시글 작성</h1>
+  <div class="card-header1">
+    <h1 id="pageTitle"><a>게시글 작성</a></h1>
+  </div>
+
   <form id="postForm" enctype="multipart/form-data">
-    <input type="text" id="postTitle" name="postTitle" placeholder="제목을 입력하세요" required><br><br>
-    <textarea id="postContent" name="postContent" rows="10" placeholder="내용을 입력하세요" required></textarea><br><br>
-    <input type="file" id="postFile" name="postFile"><br><br>
-    <button type="submit" id="submitPost">등록</button>
-    <button type="button" onclick="location.href='board.html'">취소</button>
+    <div class="card-write">
+      <!-- 제목 입력 -->
+      <div class="title-w">
+        <input type="text" id="postTitle" name="postTitle" placeholder="제목을 입력하세요" required>
+      </div>
+
+      <!-- 내용 입력 -->
+      <div class="msg">
+        <textarea id="postContent" name="postContent" placeholder="내용을 입력하세요" required></textarea>
+      </div>
+
+      <!-- 파일 첨부 -->
+      <div class="file">
+        <input type="file" id="postFile" name="postFile">
+      </div>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="btn-w">
+      <a id="submitPost" href="#">등록</a>
+      <a href="board.html">취소</a>
+    </div>
   </form>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("postForm");
+  const submitBtn = document.getElementById("submitPost");
   const urlParams = new URLSearchParams(location.search);
-  const mode = urlParams.get("mode"); // 'edit' or null
+  const mode = urlParams.get("mode"); // 'edit'
   const postIdx = urlParams.get("postIdx");
 
   if (mode === "edit" && postIdx) {
-    document.getElementById("pageTitle").innerText = "게시글 수정";
-    document.getElementById("submitPost").innerText = "수정";
+    document.querySelector("#pageTitle a").innerText = "게시글 수정";
+    submitBtn.innerText = "수정";
 
-    // 기존 게시글 정보 불러오기
     fetch(`/api/posts/${postIdx}`)
       .then(res => res.json())
       .then(post => {
@@ -59,10 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("게시글 불러오기 실패:", err));
   }
 
-  // 폼 제출
-  form.addEventListener("submit", async (e) => {
+  submitBtn.addEventListener("click", async (e) => {
     e.preventDefault();
-
     const formData = new FormData(form);
 
     let endpoint = "/api/posts";

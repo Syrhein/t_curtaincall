@@ -28,20 +28,40 @@
 
 <!-- ✅ 게시글 상세 영역 -->
 <div class="container">
-  <h1 id="postTitle">제목 불러오는 중...</h1>
-  <p>작성자: <span id="postAuthor">-</span></p>
-  <p>작성일: <span id="postDate">-</span></p>
-  <p>조회수: <span id="postViews">0</span></p>
-  <div id="postContent">내용 불러오는 중...</div>
+  <div class="card-view">
 
-  <!-- 파일 다운로드 영역 -->
-  <div id="fileDownloadSection" style="margin-top: 20px;"></div>
+    <!-- 제목 -->
+    <h2 class="title" id="postTitle">제목 불러오는 중...</h2>
 
-  <!-- 버튼 -->
-  <div id="postButtons" class="btn_posting" style="margin-top: 30px; display: flex; justify-content: flex-end;">
-    <button onclick="goToEdit()" class="btn_list">수정</button>
-    <button onclick="deletePost()" class="btn_list">삭제</button>
-    <button onclick="location.href='board.html'" class="btn_list">목록</button>
+    <!-- 작성자, 날짜, 조회수 -->
+    <div class="myinfo">
+      <dl>
+        <dt>작성자</dt>
+        <dd id="postAuthor">-</dd>
+        <dt>작성일</dt>
+        <dd id="postDate">-</dd>
+        <dt>조회수</dt>
+        <dd id="postViews">0</dd>
+      </dl>
+    </div>
+
+    <div class="space"></div>
+
+    <!-- 게시글 내용 -->
+    <div class="cont">
+      <div class="cont_text" id="postContent">내용 불러오는 중...</div>
+    </div>
+
+    <!-- 첨부파일 -->
+    <div id="fileDownloadSection" class="card-header" style="margin-top: 20px;"></div>
+
+    <!-- 수정/삭제/목록 버튼 -->
+    <div id="postButtons" class="btn-view">
+      <a href="#" onclick="goToEdit()">수정</a>
+      <a href="#" onclick="deletePost()">삭제</a>
+      <a href="board.html">목록</a>
+    </div>
+
   </div>
 </div>
 
@@ -77,19 +97,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("postViews").innerText = postData.postViews;
     document.getElementById("postContent").innerHTML = postData.postContent.replace(/\n/g, "<br>");
 
-    // 첨부파일 있을 경우 다운로드 링크 표시
     if (postData.postFileName && postData.postFilePath) {
-      const fileArea = document.getElementById("fileDownloadSection");
       const filePath = postData.postFilePath.startsWith('/uploads') ? postData.postFilePath : `/uploads/${postData.postFilePath}`;
-      fileArea.innerHTML = `
-        <p>첨부파일: <a href="${filePath}" download="${postData.postFileName}">${postData.postFileName}</a></p>
+      document.getElementById("fileDownloadSection").innerHTML = `
+        <h3><a href="${filePath}" download="${postData.postFileName}">${postData.postFileName}</a></h3>
       `;
     }
 
-    // 본인 글이 아닐 경우 수정/삭제 버튼 숨기기
+    // 본인 글이 아닐 경우 버튼 숨기기
     if (!loginUserId || loginUserId !== postData.userId) {
       document.getElementById("postButtons").style.display = "none";
     }
+
   } catch (err) {
     alert("게시글을 불러오는 중 오류가 발생했습니다.");
     console.error(err);
