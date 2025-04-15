@@ -167,31 +167,43 @@ async function loadComments(page = 1) {
       return;
     }
 
-    data.comments.forEach(comment => {
-      const commentEl = document.createElement("div");
-      commentEl.classList.add("comment-item");
+	data.comments.forEach(comment => {
+		const commentEl = document.createElement("div");
+		commentEl.classList.add("comment-item");
 
-      const dateStr = new Date(comment.createdAt).toLocaleString();
-      let buttons = "";
+		// 대댓글이면 클래스 추가 or 스타일 조정
+		if (comment.parentId) {
+			commentEl.classList.add("child-comment");
+		}
 
-      if (loginUserId && loginUserId === comment.userId) {
-        buttons = `
-          <button class="comment-delete" data-id="${comment.commentId}">삭제</button>
-          <button class="comment-edit" data-id="${comment.commentId}">수정</button>
-        `;
-      }
+		const dateStr = new Date(comment.createdAt).toLocaleString();
+		let buttons = "";
 
-      commentEl.innerHTML = `
-        <div>
-          <span class="comment-author">${comment.userName || comment.userId}</span>
-          <span class="comment-date">${dateStr}</span>
-        </div>
-        <div class="comment-content" data-id="${comment.commentId}">${comment.content}</div>
-        <div class="comment-buttons">${buttons}</div>
-      `;
+		if (loginUserId && loginUserId === comment.userId) {
+			buttons += `
+			<button class="comment-delete" data-id="${comment.commentId}">삭제</button>
+			<button class="comment-edit" data-id="${comment.commentId}">수정</button>
+			`;
+		}
 
-      list.appendChild(commentEl);
-    });
+		// 대댓글 버튼
+		buttons += `
+			<button class="comment-reply" data-id="${comment.commentId}">답글</button>
+			<button class="comment-like" data-id="${comment.commentId}">❤️ ${comment.likes || 0}</button>
+		`;
+
+		commentEl.innerHTML = `
+			<div>
+			<span class="comment-author">${comment.userName || comment.userId}</span>
+			<span class="comment-date">${dateStr}</span>
+			</div>
+			<div class="comment-content" data-id="${comment.commentId}">${comment.content}</div>
+			<div class="comment-buttons">${buttons}</div>
+		`;
+
+		list.appendChild(commentEl);
+		});
+
 
     // ✅ 페이지네이션 버튼 생성
     renderPagination(data.totalCount, page, data.limit);
@@ -343,6 +355,94 @@ function renderPagination(total, currentPage, limit) {
 
   container.appendChild(nav);
 }
+
+// 댓글 좋아요 기능
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("comment-like")) {
+    const commentId = e.target.dataset.id;
+
+    try {
+      const res = await fetch(`/api/comments/${commentId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: loginUserId })
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        loadComments(); // 새로고침
+      }
+    } catch (err) {
+      console.error("좋아요 토글 오류:", err);
+    }
+  }
+});
+
+// 대댓글 기능(답글 버튼)
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("comment-reply")) {
+    const parentId = e.target.dataset.id;
+
+    // 이미 열려있다면 return
+    if (document.querySelector(`.reply-form[data-parent="${parentId}"]`)) return;
+
+    const parentEl = document.querySelector(`.comment-content[data-id="${parentId}"]`);
+    const replyForm = document.createElement("div");
+    replyForm.classList.add("reply-form");
+    replyForm.dataset.parent = parentId;
+
+    replyForm.innerHTML = `
+      <textarea class="reply-input" placeholder="답글을 입력하세요"></textarea>
+      <button class="reply-submit" data-parent="${parentId}">등록</button>
+      <button class="reply-cancel" data-parent="${parentId}">취소</button>
+    `;
+
+    parentEl.parentElement.appendChild(replyForm);
+  }
+});
+
+// 대댓글 작성 이벤트
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("reply-submit")) {
+    const parentId = e.target.dataset.parent;
+    const textarea = e.target.closest(".reply-form").querySelector(".reply-input");
+    const content = textarea.value.trim();
+    const postIdx = new URLSearchParams(location.search).get("postIdx");
+
+    if (!content) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: postIdx,
+          userId: loginUserId,
+          content,
+          parentId
+        })
+      });
+
+      const result = await res.json();
+      if (res.ok && result.success) {
+        loadComments();
+      } else {
+        alert("등록 실패: " + (result.error || "서버 오류"));
+      }
+    } catch (err) {
+      console.error("대댓글 작성 오류:", err);
+    }
+  }
+
+  if (e.target.classList.contains("reply-cancel")) {
+    e.target.closest(".reply-form").remove();
+  }
+});
+
+
 
 
 
