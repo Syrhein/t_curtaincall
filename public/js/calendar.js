@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
             plugins: ['dayGrid'], // 월별 보기 플러그인
             initialView: 'dayGridMonth', // 기본 월간 보기 설정
             events: (fetchInfo, successCallback, failureCallback) => {
-                fetch('http://localhost:8081/test1/CalendarServlet')
+                fetch('/api/mypage/calendar')
                     .then(response => {
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
@@ -30,11 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             eventRender: function (info) {
                 // 기존의 제목 span을 링크로 교체
-                const link = document.createElement('a'); // 링크 요소 생성
-                link.textContent = info.event.title; // 제목 설정
-                link.href = `http://localhost:8081/test1/detail.html?musicalId=${info.event.extendedProps.musicalId}&showIdx=${info.event.extendedProps.showIdx}`; // 상세페이지 URL 설정
-                link.target = '_blank'; // 새 창에서 열기
-                link.className = 'fc-title-link'; // CSS 클래스 추가
+                const link = document.createElement('a');
+                link.textContent = info.event.title;
+                link.href = `/detail.html?musicalId=${info.event.extendedProps.musicalId}&showIdx=${info.event.extendedProps.showIdx}`;
+                link.target = '_blank';
+                link.className = 'fc-title-link';
+
 
                 // 기존 span.fc-title을 link로 교체
                 const titleElement = info.el.querySelector('.fc-title'); // 기존 제목 요소

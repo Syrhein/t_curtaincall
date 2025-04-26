@@ -28,40 +28,54 @@ router.get('/', async (req, res) => {
 
 // 공연 상세 조회
 router.get('/:musicalId/:showIdx', async (req, res) => {
-    const { musicalId, showIdx } = req.params;
-  
-    try {
-      const [rows] = await db.query(`
-        SELECT 
-          M.MUSICAL_ID AS musicalId,
-          M.MUSICAL_TITLE AS musicalTitle,
-          M.MUSICAL_POSTER AS musicalPoster,
-          M.MUSICAL_CAST AS musicalCast,
-          M.MUSICAL_LICENSE AS musicalLicense,
-          M.MUSICAL_CREATE AS musicalCreate,
-          S.SHOW_IDX AS showIdx,
-          S.HALL_NAME AS hallName,
-          S.SHOW_DT AS showDt,
-          S.SHOW_RUNTIME AS showRuntime,
-          S.SHOW_PRICE AS showPrice,
-          S.SHOW_IMGS AS showImgs,
-          S.SHOW_VIEWS AS showViews
-        FROM TB_MUSICAL M
-        JOIN TB_SHOW S ON M.MUSICAL_ID = S.MUSICAL_ID
-        WHERE M.MUSICAL_ID = ? AND S.SHOW_IDX = ?
-        LIMIT 1
-      `, [musicalId, showIdx]);
-  
-      if (rows.length === 0) {
-        return res.status(404).json({ message: '해당 공연을 찾을 수 없습니다.' });
-      }
-  
-      res.json(rows[0]);
-    } catch (err) {
-      console.error('❌ 상세 조회 오류:', err.message);
-      res.status(500).json({ message: '서버 오류' });
+  const { musicalId, showIdx } = req.params;
+
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        M.MUSICAL_ID AS musicalId,
+        M.MUSICAL_TITLE AS musicalTitle,
+        M.MUSICAL_POSTER AS musicalPoster,
+        M.MUSICAL_CAST AS musicalCast,
+        M.MUSICAL_LICENSE AS musicalLicense,
+        M.MUSICAL_CREATE AS musicalCreate,
+        M.MUSICAL_ST_DT AS musicalStDt,
+        M.MUSICAL_ED_DT AS musicalEdDt,
+        S.SHOW_IDX AS showIdx,
+        S.HALL_NAME AS hallName,
+        S.SHOW_DT AS showDt,
+        S.SHOW_RUNTIME AS showRuntime,
+        S.SHOW_PRICE AS showPrice,
+        S.SHOW_IMGS AS showImgs,
+        S.SHOW_VIEWS AS showViews
+      FROM TB_MUSICAL M
+      JOIN TB_SHOW S ON M.MUSICAL_ID = S.MUSICAL_ID
+      WHERE M.MUSICAL_ID = ? AND S.SHOW_IDX = ?
+      LIMIT 1
+    `, [musicalId, showIdx]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: '해당 공연을 찾을 수 없습니다.' });
     }
-  });
+
+    const musical = rows[0];
+
+    // ✅ 날짜 포맷 변환
+    const formattedStDt = musical.musicalStDt ? musical.musicalStDt.toISOString().slice(0, 10) : null;
+    const formattedEdDt = musical.musicalEdDt ? musical.musicalEdDt.toISOString().slice(0, 10) : null;
+
+    res.json({
+      ...musical,
+      musicalStDt: formattedStDt,
+      musicalEdDt: formattedEdDt
+    });
+
+  } catch (err) {
+    console.error('❌ 상세 조회 오류:', err.message);
+    res.status(500).json({ message: '서버 오류' });
+  }
+});
+
   
 
   // 📌 조회수 증가 라우터 추가

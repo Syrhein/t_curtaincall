@@ -115,7 +115,54 @@ router.get('/reviews', async (req, res) => {
       res.status(500).json({ success: false, message: '서버 오류' });
     }
   });
-  
+
+// ✅ 마이페이지 캘린더 이벤트 조회 API
+router.get('/calendar', async (req, res) => {
+  try {
+    const userSession = req.session.user;
+
+    if (!userSession) {
+      return res.status(401).json({ success: false, message: '로그인이 필요합니다.' });
+    }
+
+    const [events] = await pool.query(`
+      SELECT 
+        m.MUSICAL_TITLE AS title,
+        DATE_FORMAT(m.MUSICAL_ST_DT, '%Y-%m-%d') AS start,
+        DATE_FORMAT(m.MUSICAL_ED_DT, '%Y-%m-%d') AS end,
+        m.MUSICAL_ID AS musicalId,
+        s.SHOW_IDX AS showIdx
+      FROM 
+        tb_favorite f
+      JOIN 
+        tb_show s ON f.SHOW_IDX = s.SHOW_IDX
+      JOIN 
+        tb_musical m ON s.MUSICAL_ID = m.MUSICAL_ID
+      WHERE 
+        f.USER_ID = ?
+    `, [userSession.id]);
+
+    // ✅ 공연별로 색깔 추가
+    const colors = ['#f87171', '#60a5fa', '#34d399', '#fbbf24', '#a78bfa', '#f472b6', '#38bdf8', '#fb923c'];
+
+    const formattedEvents = events.map((item, index) => ({
+      title: item.title,
+      start: item.start,
+      end: item.end,
+      musicalId: item.musicalId,
+      showIdx: item.showIdx,
+      color: colors[index % colors.length] // 공연별로 색 순환
+    }));
+
+    res.json(formattedEvents);
+
+  } catch (error) {
+    console.error('❌ 캘린더 이벤트 불러오기 오류:', error.message);
+    res.status(500).json({ success: false, message: '서버 오류' });
+  }
+});
+
+
   
 
 
