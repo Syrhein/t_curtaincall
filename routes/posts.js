@@ -10,7 +10,9 @@ const storage = multer.diskStorage({
     cb(null, 'public/uploads/');
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '_' + file.originalname;
+    // 👉 한글 깨짐 방지를 위해 파일명을 utf-8로 변환
+    const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    const uniqueName = Date.now() + '_' + originalName;
     cb(null, uniqueName);
   }
 });

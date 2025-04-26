@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>나의 즐겨찾기</title>
+  <link rel="stylesheet" href="./css/favoritePopup.css">
+</head>
+<body>
+  <h1>나의 즐겨찾기</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>공연명</th>
+        <th>공연일정</th>
+      </tr>
+    </thead>
+    <tbody id="favorite-list">
+      <!-- 여기에 즐겨찾기 공연 목록이 삽입될 예정 -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('/api/mypage/favorites')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('서버 응답 오류');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const list = document.getElementById('favorite-list');
+          list.innerHTML = '';
+          if (data.length === 0) {
+            list.innerHTML = '<tr><td colspan="2" style="text-align:center;">즐겨찾기한 공연이 없습니다.</td></tr>';
+          } else {
+            data.forEach(item => {
+              const row = `
+                <tr>
+                  <td><a href="detail.html?musicalId=${item.musicalId}&showIdx=${item.showIdx}" target="_blank">${item.musicalTitle}</a></td>
+                  <td>${item.startDate} ~ ${item.endDate}</td>
+                </tr>
+              `;
+              list.insertAdjacentHTML('beforeend', row);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('에러 발생:', error);
+          alert('즐겨찾기 정보를 불러오는데 실패했습니다.');
+        });
+    });
+  </script>
+</body>
+</html>

@@ -28,6 +28,8 @@ const favoriteRoutes = require('./routes/favorite');
 const reviewRoutes = require('./routes/reviews');
 const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
+const mypageRoutes = require('./routes/mypage');
+const userRoutes = require('./routes/users');
 app.use('/api/slides', slideRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/signup', signupRoutes);
@@ -36,7 +38,8 @@ app.use('/api/favorite', favoriteRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
-
+app.use('/api/mypage', mypageRoutes);
+app.use('/api/users', userRoutes);
 
 // 기본 경로
 app.get('/', (req, res) => { // 루트 경로 / 에 접속시 보내줄 응답
