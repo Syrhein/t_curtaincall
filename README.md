@@ -105,15 +105,25 @@
 🛠 시스템 아키텍처
 
 사용자 요청 (콘솔에 node fetch/kopisFetcher.js 20250401 20250531) 기한은 본인이 지정하고 싶은 기한으로
+
 ↓ 
+
 Express 서버 (Node.js) 
+
 ↓ 
+
 MySQL 데이터베이스 (공연정보 / 회차정보 저장)
+
 ↓ 
+
 KOPIS OpenAPI (공연데이터 수집)
+
 ↓ 
-Express 서버 (Node.js) (콘솔에 node index.js로 실행)
+
+Express 서버 (Node.js) [콘솔 node index.js로 실행]
+
 ↓ 
+
 localhost로 실행
 
 ---
