@@ -5,10 +5,17 @@ const xml2js = require('xml2js');
 const { saveAllToDB } = require('./saveToDB');
 require('dotenv').config(); // .env 파일의 내용을 읽어와서 process.env에 등록함
 
+// CLI 파라미터 읽기
+const args = process.argv.slice(2);
+
 const SERVICE_KEY = process.env.SERVICE_KEY; // 안전하게 키를 불러옴
 const BASE_URL = 'http://kopis.or.kr/openApi/restful/pblprfr';
-const std= '20250401';
-const edd= '20250430';
+
+// 날짜 기본값은 20250401 ~ 20250430
+const std = args[0] || '20250401';
+const edd = args[1] || '20250430';
+
+console.log(`📅 데이터 수집 기간: ${std} ~ ${edd}`);
 
 
 
