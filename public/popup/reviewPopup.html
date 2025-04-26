@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>나의 리뷰</title>
+  <link rel="stylesheet" href="../css/favoritePopup.css"> <!-- 기존 테이블 CSS 그대로 사용 -->
+</head>
+<body>
+  <h1>나의 리뷰</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>공연명</th>
+        <th>작성일</th>
+      </tr>
+    </thead>
+    <tbody id="review-list">
+      <!-- 내가 작성한 리뷰 목록이 삽입될 예정 -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('/api/mypage/reviews')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('서버 응답 오류');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const list = document.getElementById('review-list');
+          list.innerHTML = '';
+          if (data.length === 0) {
+            list.innerHTML = '<tr><td colspan="2" style="text-align:center;">작성한 리뷰가 없습니다.</td></tr>';
+          } else {
+            data.forEach(item => {
+                const row = `
+                <tr>
+                    <td><a href="/detail.html?musicalId=${item.musicalId}&showIdx=${item.showIdx}" target="_blank">${item.musicalTitle}</a></td>
+                    <td>${item.createdAt}</td>
+                </tr>
+                `;
+              list.insertAdjacentHTML('beforeend', row);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('리뷰 목록 불러오기 오류:', error);
+          alert('리뷰 정보를 불러오는데 실패했습니다.');
+        });
+    });
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>나의 즐겨찾기</title>
-  <link rel="stylesheet" href="./css/favoritePopup.css">
+  <link rel="stylesheet" href="../css/favoritePopup.css">
 </head>
 <body>
   <h1>나의 즐겨찾기</h1>
@@ -38,7 +38,7 @@
             data.forEach(item => {
               const row = `
                 <tr>
-                  <td><a href="detail.html?musicalId=${item.musicalId}&showIdx=${item.showIdx}" target="_blank">${item.musicalTitle}</a></td>
+                  <td><a href="/detail.html?musicalId=${item.musicalId}&showIdx=${item.showIdx}" target="_blank">${item.musicalTitle}</a></td>
                   <td>${item.startDate} ~ ${item.endDate}</td>
                 </tr>
               `;
